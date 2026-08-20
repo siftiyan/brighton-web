@@ -1,0 +1,826 @@
+/* ==========================================================================
+   1. RESET & LAYOUT DASAR SYSTEM FAT AUDIT PROGRAM
+   ========================================================================== */
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Segoe UI', Arial, sans-serif; 
+}
+
+body { 
+    background-color: #f4f6f9; 
+    color: #333; 
+}
+
+.app-container { 
+    display: flex; 
+    min-height: 100vh; 
+}
+
+/* ==========================================================================
+   2. SIDEBAR STYLES
+   ========================================================================== */
+.sidebar { 
+    width: 220px; 
+    background-color: #2c3e50; 
+    color: #ecf0f1; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.brand { 
+    padding: 12px 15px; 
+    background-color: #1a252f; 
+}
+
+.brand h2 { 
+    font-size: 14px; 
+    color: #fff; 
+    font-weight: 600; 
+}
+
+.user-profile { 
+    padding: 10px 15px; 
+    background-color: #243342; 
+    font-size: 12px; 
+    border-bottom: 1px solid #34495e; 
+}
+
+.user-profile i { 
+    margin-right: 6px; 
+    color: #bdc3c7; 
+}
+
+.sidebar-menu ul { 
+    list-style: none; 
+}
+
+.sidebar-menu a { 
+    display: flex; 
+    align-items: center; 
+    padding: 10px 15px; 
+    color: #bdc3c7; 
+    text-decoration: none; 
+    font-size: 12px; 
+    border-bottom: 1px solid #34495e; 
+}
+
+.sidebar-menu a i { 
+    width: 22px; 
+}
+
+.sidebar-menu li.active a, 
+.sidebar-menu a:hover { 
+    background-color: #2980b9; 
+    color: #fff; 
+}
+
+/* ==========================================================================
+   3. HEADER & MAIN CONTENT AREA
+   ========================================================================== */
+.main-content { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.topbar { 
+    background: #fff; 
+    height: 45px; 
+    border-bottom: 1px solid #dcdcdc; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 0 15px; 
+}
+
+.page-title h1 { 
+    font-size: 16px; 
+    font-weight: 500; 
+    color: #333; 
+}
+
+.topbar-right { 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+.search-box i { 
+    color: #7f8c8d; 
+    cursor: pointer; 
+}
+
+.nav-tabs { 
+    display: flex; 
+    list-style: none; 
+}
+
+.tab-item { 
+    padding: 13px 10px; 
+    font-size: 12px; 
+    color: #555; 
+    cursor: pointer; 
+    border-bottom: 3px solid transparent; 
+}
+
+.tab-item.active { 
+    color: #2980b9; 
+    font-weight: bold; 
+    border-bottom: 3px solid #2980b9; 
+}
+
+.content-body { 
+    padding: 10px 15px; 
+    flex: 1; 
+}
+
+.tab-view { 
+    display: none; 
+}
+
+.tab-view.active { 
+    display: block; 
+}
+
+/* ==========================================================================
+   4. BUTTONS & CONTROLS
+   ========================================================================== */
+.action-bar { 
+    margin-bottom: 10px; 
+    display: flex; 
+    gap: 5px; 
+}
+
+.btn { 
+    padding: 5px 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 3px; 
+    font-size: 11px; 
+    cursor: pointer; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 4px; 
+}
+
+.btn-xs { 
+    padding: 3px 6px; 
+    font-size: 10px; 
+}
+
+.btn-success { 
+    background: #28a745; 
+    color: #fff; 
+    border-color: #218838; 
+}
+
+.btn-success:hover { 
+    background: #218838; 
+}
+
+.btn-secondary { 
+    background: #e0e0e0; 
+    color: #333; 
+}
+
+.btn-secondary:hover { 
+    background: #d4d4d4; 
+}
+
+.btn-primary-alt {
+    background: #007bff;
+    color: #fff;
+    border-color: #0069d9;
+}
+
+.btn-purple {
+    background: #6f42c1;
+    color: #fff;
+    border-color: #5a32a3;
+}
+
+.btn-purple:hover {
+    background: #5a32a3;
+}
+
+.btn-danger { 
+    background: #dc3545; 
+    color: #fff; 
+    border-color: #bd2130; 
+}
+
+/* ==========================================================================
+   5. DATA TABLES & GRID SYSTEM
+   ========================================================================== */
+.table-container, 
+.table-card { 
+    background: #fff; 
+    border: 1px solid #c0c0c0; 
+    margin-bottom: 12px; 
+}
+
+.table-header-info, 
+.table-footer-info { 
+    background: #8e9eab; 
+    color: #fff; 
+    font-size: 11px; 
+    padding: 3px 8px; 
+    text-align: right; 
+}
+
+.table-sub-title { 
+    background: #eef4f8; 
+    padding: 6px 10px; 
+    font-size: 11px; 
+    font-weight: bold; 
+    color: #2c3e50; 
+    border-bottom: 1px solid #c0c0c0; 
+}
+
+.data-table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    font-size: 11px; 
+}
+
+.data-table th { 
+    background: #95a5a6; 
+    color: #fff; 
+    padding: 6px 8px; 
+    text-align: left; 
+    font-weight: 600; 
+    border-right: 1px solid #7f8c8d; 
+}
+
+.data-table td { 
+    padding: 6px 8px; 
+    border-bottom: 1px solid #eee; 
+    border-right: 1px solid #f0f0f0; 
+    color: #2c3e50; 
+    line-height: 1.4; 
+}
+
+.data-table tbody tr:nth-child(even) { 
+    background: #f9f9f9; 
+}
+
+.data-table tbody tr.row-approved {
+    background-color: #eafaf1;
+}
+
+.text-center { 
+    text-align: center; 
+}
+
+/* ==========================================================================
+   6. FORM & DETAIL STYLES
+   ========================================================================== */
+.breadcrumb { 
+    font-size: 11px; 
+    color: #2980b9; 
+    margin-bottom: 10px; 
+    background: #eef4f8; 
+    padding: 6px 10px; 
+    border: 1px solid #d0e1fd; 
+}
+
+.tab-sub-right { 
+    float: right; 
+    color: #333; 
+}
+
+.form-section { 
+    background: #fff; 
+    border: 1px solid #ccc; 
+    padding: 12px; 
+    margin-bottom: 12px; 
+}
+
+.form-row { 
+    display: flex; 
+    align-items: center; 
+    margin-bottom: 10px; 
+}
+
+.row-label { 
+    width: 120px; 
+    font-size: 11px; 
+    font-weight: 600; 
+    color: #444; 
+}
+
+.sub-note { 
+    font-size: 10px; 
+    color: #888; 
+    font-style: italic; 
+    margin-left: 8px; 
+}
+
+.tag-input-container { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 4px; 
+    padding: 4px; 
+    border: 1px solid #b8c4d0; 
+    background: #fff; 
+    min-height: 28px; 
+    width: 600px; 
+    border-radius: 2px; 
+}
+
+.tag-item { 
+    background: #e8ecef; 
+    border: 1px solid #ced4da; 
+    padding: 2px 6px; 
+    font-size: 10px; 
+    border-radius: 2px; 
+    display: flex; 
+    align-items: center; 
+    gap: 4px; 
+}
+
+.tag-item .close-tag { 
+    cursor: pointer; 
+    color: #888; 
+    font-weight: bold; 
+}
+
+.radio-group { 
+    display: flex; 
+    gap: 15px; 
+    font-size: 11px; 
+}
+
+.form-select-inline, 
+.form-control-inline { 
+    padding: 4px 6px; 
+    font-size: 11px; 
+    border: 1px solid #ccc; 
+    border-radius: 2px; 
+}
+
+.form-control-inline { 
+    width: 350px; 
+}
+
+.card-header-bar { 
+    background: #6c7a89; 
+    color: #fff; 
+    padding: 6px 10px; 
+    font-size: 12px; 
+    font-weight: bold; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.search-link-box { 
+    display: flex; 
+    gap: 5px; 
+}
+
+.search-link-box input { 
+    padding: 3px 6px; 
+    font-size: 10px; 
+    width: 250px; 
+    border: 1px solid #ccc; 
+}
+
+.btn-link { 
+    background: #e0e0e0; 
+    border: 1px solid #aaa; 
+    font-size: 10px; 
+    padding: 2px 6px; 
+    cursor: pointer; 
+}
+
+.question-textarea { 
+    width: 100%; 
+    height: 42px; 
+    padding: 4px; 
+    font-size: 11px; 
+    border: 1px solid #ccc; 
+    border-radius: 2px; 
+    resize: vertical; 
+}
+
+.options-box { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 3px; 
+    font-size: 10px; 
+}
+
+.evaluator-input { 
+    padding: 3px 5px; 
+    font-size: 10px; 
+    width: 100%; 
+    border: 1px solid #ccc; 
+    border-radius: 2px; 
+}
+
+.file-icon {
+    color: #2980b9;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 8px;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.file-icon:hover {
+    color: #1a5276;
+    transform: scale(1.25);
+}
+
+.action-btns-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ==========================================================================
+   7. DETAIL EVALUASIKU (SUB-TABS: FILES, REVIEW 4K, NILAI)
+   ========================================================================== */
+.detail-header-card {
+    background: #fff;
+    border-bottom: 1px solid #dcdcdc;
+    padding: 10px 15px 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.detail-breadcrumb {
+    font-size: 13px;
+    color: #333;
+    padding-bottom: 10px;
+}
+
+.detail-breadcrumb a {
+    color: #2980b9;
+    text-decoration: none;
+}
+
+.eval-sub-tabs {
+    display: flex;
+    gap: 15px;
+}
+
+.eval-sub-tab {
+    font-size: 12px;
+    color: #666;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+}
+
+.eval-sub-tab.active {
+    color: #2980b9;
+    font-weight: bold;
+    border-bottom: 3px solid #2980b9;
+}
+
+.eval-sub-content {
+    display: none;
+}
+
+.eval-sub-content.active {
+    display: block;
+}
+
+.files-dual-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.uploaded-file-row {
+    background: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+}
+
+.uploaded-file-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+
+.uploaded-file-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.file-box-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-box-left i {
+    font-size: 18px;
+    color: #e74c3c;
+}
+
+.file-meta-name {
+    font-size: 11px;
+    font-weight: bold;
+    color: #333;
+}
+
+.file-meta-time {
+    font-size: 9px;
+    color: #888;
+}
+
+.modal-essai-item {
+    background: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-left: 4px solid #6f42c1;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 3px;
+}
+
+.modal-essai-q-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+
+.modal-essai-ans-body {
+    font-size: 11px;
+    background: #f5f0fb;
+    padding: 10px;
+    border-radius: 3px;
+    color: #333;
+    line-height: 1.5;
+    border: 1px solid #e4d7f5;
+}
+
+/* ==========================================================================
+   8. REVIEW 4K TAB & PERIODE NAVIGATION STYLES
+   ========================================================================== */
+.periode-tabs-container {
+    display: flex;
+    gap: 8px;
+    background: #eef4f8;
+    padding: 6px;
+    border: 1px solid #d4e3ee;
+    border-radius: 4px;
+}
+
+.periode-tab-btn {
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.periode-tab-btn.active {
+    background: #2980b9;
+    color: #fff;
+    border-color: #2471a3;
+}
+
+.review4k-layout {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr;
+    gap: 15px;
+}
+
+.indicator-group-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.indicator-box {
+    background: #fdfdfd;
+    border: 1px solid #e2e8f0;
+    padding: 10px 12px;
+    border-radius: 3px;
+}
+
+.indicator-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.ind-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.ind-score-input {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.ind-score-input input {
+    width: 65px;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    border: 1px solid #2980b9;
+    border-radius: 3px;
+    background: #fff;
+}
+
+.ind-desc {
+    font-size: 10px;
+    color: #7f8c8d;
+    margin-bottom: 6px;
+    font-style: italic;
+}
+
+.indicator-box textarea {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 3px;
+    background: #f8fafc;
+    resize: vertical;
+}
+
+/* ==========================================================================
+   9. MODAL OVERLAY STYLES
+   ========================================================================== */
+.modal-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.5); 
+    display: none; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1000; 
+}
+
+.modal-box { 
+    background: #fff; 
+    width: 450px; 
+    border-radius: 4px; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+    overflow: hidden; 
+}
+
+.modal-header { 
+    background: #2c3e50; 
+    color: #fff; 
+    padding: 10px 15px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-size: 13px; 
+}
+
+.modal-body { 
+    padding: 15px; 
+}
+
+.modal-footer { 
+    padding: 10px 15px; 
+    background: #f4f6f9; 
+    display: flex; 
+    justify-content: flex-end; 
+    gap: 8px; 
+}
+
+.close-btn { 
+    cursor: pointer; 
+    font-size: 18px; 
+}
+
+/* ==========================================================================
+   10. EVALUASIKU LAYOUT & WEIGHT BADGES
+   ========================================================================== */
+.form-card { 
+    background: #fff; 
+    padding: 15px; 
+    border: 1px solid #ccc; 
+    border-radius: 3px; 
+}
+
+.evaluasiku-layout { 
+    display: grid; 
+    grid-template-columns: 2.2fr 1fr; 
+    gap: 15px; 
+}
+
+.weight-badge { 
+    font-size: 10px; 
+    background: #d1ecf1; 
+    color: #0c5460; 
+    padding: 2px 6px; 
+    border-radius: 2px; 
+    font-weight: normal; 
+}
+
+.calculation-breakdown { 
+    background: #f8f9fa; 
+    border: 1px solid #e9ecef; 
+    padding: 8px; 
+    font-size: 11px; 
+    border-radius: 3px; 
+    margin-top: 5px; 
+}
+
+.calc-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 3px; 
+}
+
+.point-box { 
+    text-align: center; 
+    padding: 10px; 
+    background: #eef9f1; 
+    border: 1px solid #c3e6cb; 
+    margin-top: 10px; 
+}
+
+.total-score-badge { 
+    font-size: 36px; 
+    font-weight: bold; 
+    color: #28a745;
+    margin: 4px 0; 
+    transition: color 0.2s ease;
+}
+
+.total-score-badge.score-passed {
+    color: #28a745 !important;
+}
+
+.total-score-badge.score-failed {
+    color: #dc3545 !important;
+}
+
+.badge { 
+    padding: 3px 6px; 
+    border-radius: 2px; 
+    font-size: 10px; 
+    font-weight: bold; 
+    color: #fff; 
+}
+
+.badge-lulus, .badge-approved { background-color: #28a745; }
+.badge-gagal, .badge-pending { background-color: #dc3545; }
+.badge-pg { background-color: #007bff; }
+.badge-essai { background-color: #6f42c1; }
+.badge-praktik { background-color: #27ae60; }
+
+.form-footer-btns { 
+    margin-top: 10px; 
+    display: flex; 
+    gap: 5px; 
+}
+
+.full-width { 
+    width: 100%; 
+    justify-content: center; 
+}
+
+.flex-between { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.margin-top { 
+    margin-top: 12px; 
+}
+
+.divider { 
+    margin: 12px 0; 
+    border: none; 
+    border-top: 1px solid #eee; 
+}
