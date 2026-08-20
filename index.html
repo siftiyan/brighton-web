@@ -46,7 +46,7 @@
                     <ul class="nav-tabs">
                         <li class="tab-item" onclick="switchMainTab('master-training', this)">Master Training</li>
                         <li class="tab-item" onclick="switchMainTab('quiz', this)">Master Quiz</li>
-                        <li class="tab-item" onclick="switchMainTab('master-handout', this)">Handout</li> <!-- NAMA GANTI HANDOUT -->
+                        <li class="tab-item" onclick="switchMainTab('master-handout', this)">Handout</li>
                         <li class="tab-item active" onclick="switchMainTab('evaluasiku', this)">Evaluasiku</li>
                     </ul>
                 </div>
@@ -173,7 +173,7 @@
                 </div>
 
                 <!-- ======================================================= -->
-                <!-- TAB 2: MASTER QUIZ (PG, ESSAI, & TES PRAKTIK)           -->
+                <!-- TAB 2: MASTER QUIZ (PG, ESSAI, DAN TES PRAKTIK PDF)     -->
                 <!-- ======================================================= -->
                 <div id="tab-quiz" class="tab-view">
                     <div id="quiz-list-view">
@@ -297,7 +297,7 @@
                 </div>
 
                 <!-- ======================================================= -->
-                <!-- TAB 3: HANDOUT (SEBELUMNYA MASTER HANDOUT)              -->
+                <!-- TAB 3: HANDOUT                                          -->
                 <!-- ======================================================= -->
                 <div id="tab-master-handout" class="tab-view">
                     <div id="handout-list-view">
@@ -569,27 +569,28 @@
                                             <span id="predikat4KBadge" class="badge badge-lulus margin-top" style="display:inline-block;">PREDIKAT: SANGAT BAIK</span>
                                         </div>
 
+                                        <!-- TOMBOL GANTI JADI: Kirim Review 4K -->
                                         <button type="button" class="btn btn-success full-width margin-top" onclick="saveReview4KData()">
-                                            <i class="fa-solid fa-floppy-disk"></i> Simpan Review 4K
+                                            <i class="fa-solid fa-paper-plane"></i> Kirim Review 4K
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 3: NILAI AKHIR (QUIZ & ASESOR) -->
+                        <!-- SUB-TAB 3: NILAI AKHIR (KOLOM JABATAN PENILAI & TOMBOL KIRIM PENILAIAN) -->
                         <div id="eval-sub-content-scores" class="eval-sub-content">
                             <div class="evaluasiku-layout margin-top">
                                 <div class="eval-left">
                                     <div class="form-card">
                                         <div class="table-sub-title flex-between">
-                                            <span><i class="fa-solid fa-list-check"></i> Riwayat Nilai Quiz & Tes Praktik (Bobot 40%)</span>
+                                            <span><i class="fa-solid fa-list-check"></i> Riwayat Nilai Quiz (Bobot 40%)</span>
                                             <span class="weight-badge">Rata-rata Quiz: <strong id="subQuizAvg">0</strong></span>
                                         </div>
                                         <table class="data-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Nama Modul / Quiz</th>
+                                                    <th>Nama Modul / Quiz (PG & Essai)</th>
                                                     <th class="text-center" style="width: 100px;">Score</th>
                                                     <th class="text-center" style="width: 140px;">Status</th>
                                                 </tr>
@@ -607,8 +608,8 @@
                                         <table class="data-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Bidang Materi</th>
-                                                    <th>Evaluator</th>
+                                                    <th style="width: 140px;">Jabatan Penilai</th> <!-- GANTI BIDANG MATERI JADI JABATAN PENILAI -->
+                                                    <th>Evaluator (Nama)</th>
                                                     <th class="text-center" style="width: 90px;">Score (1-100)</th>
                                                     <th>Catatan</th>
                                                     <th class="text-center" style="width: 35px;">Aksi</th>
@@ -631,8 +632,10 @@
                                             <div class="total-score-badge" id="subTotalPointDisplay">0</div>
                                             <span id="subPassBadge" class="badge badge-lulus margin-top" style="display:inline-block;">-</span>
                                         </div>
-                                        <button type="button" class="btn btn-success full-width margin-top" onclick="alert('Nilai Assessment Berhasil Disimpan!')">
-                                            <i class="fa-solid fa-floppy-disk"></i> Simpan Penilaian
+
+                                        <!-- TOMBOL GANTI JADI: Kirim Penilaian -->
+                                        <button type="button" class="btn btn-success full-width margin-top" onclick="alert('Penilaian Asesor Berhasil Dikirim!')">
+                                            <i class="fa-solid fa-paper-plane"></i> Kirim Penilaian
                                         </button>
                                     </div>
                                 </div>
@@ -647,7 +650,9 @@
         </main>
     </div>
 
-    <!-- MODAL 1: LINK BANK MATERI & QUIZ -->
+    <!-- =============================================================== -->
+    <!-- MODAL POPUPS                                                    -->
+    <!-- =============================================================== -->
     <div class="modal-overlay" id="linkMateriModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -667,7 +672,6 @@
         </div>
     </div>
 
-    <!-- MODAL 2: UPLOAD SKILL MATERI -->
     <div class="modal-overlay" id="uploadMateriModal">
         <div class="modal-box">
             <div class="modal-header">
@@ -705,7 +709,6 @@
         </div>
     </div>
 
-    <!-- MODAL 3: DIRECT FILE VIEWER POP-UP -->
     <div class="modal-overlay" id="fileViewerModal">
         <div class="modal-box" style="width: 750px; max-width: 90%;">
             <div class="modal-header" style="background:#2c3e50;">
@@ -722,7 +725,6 @@
         </div>
     </div>
 
-    <!-- MODAL 4: POP-UP LEMBAR JAWABAN ESSAI SISWA -->
     <div class="modal-overlay" id="essaiViewerModal">
         <div class="modal-box" style="width: 750px; max-width: 90%;">
             <div class="modal-header" style="background:#6f42c1;">

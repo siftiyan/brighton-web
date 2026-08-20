@@ -262,7 +262,7 @@ function submitUploadMateriModal(e) {
 }
 
 // =========================================================================
-// 3. MASTER QUIZ MODULE
+// 3. MASTER QUIZ MODULE (3 TIPE: PG, ESSAI, DAN TES PRAKTIK)
 // =========================================================================
 function renderQuizGrid() {
     const tbody = document.getElementById("quizGridBody");
@@ -422,7 +422,7 @@ function saveQuizData(e) {
 }
 
 // =========================================================================
-// 4. HANDOUT MODULE (SEBELUMNYA MASTER HANDOUT - MENAMPILKAN 4 PAKET)
+// 4. HANDOUT MODULE (4 PAKET)
 // =========================================================================
 function renderHandoutGrid() {
     const tbody = document.getElementById("handoutGridBody");
@@ -485,8 +485,6 @@ function openHandoutDetail(id) {
             </tr>
         `;
     });
-
-    document.getElementById("empFooterInfo").innerText = `View 1-${data.employees.length} of ${data.employees.length}`;
 }
 
 function openLinkMateriModal() {
@@ -695,7 +693,7 @@ function saveReview4KData() {
         kontribusiNote: document.getElementById("k3_note").value,
         kompetensiNote: document.getElementById("k4_note").value
     };
-    showNotificationToast(`Review 4K Periode [${currentActivePeriode.toUpperCase()}] Berhasil Disimpan!`);
+    showNotificationToast(`Review 4K Periode [${currentActivePeriode.toUpperCase()}] Berhasil Dikirim!`);
 }
 
 // RENDER FILES & ESSAI
@@ -799,7 +797,7 @@ function closeEssaiViewerModal() {
     document.getElementById("essaiViewerModal").style.display = "none";
 }
 
-// RENDER NILAI
+// RENDER NILAI (JABATAN PENILAI: SUPERVISOR, ASST. MANAGER, HRD & TOMBOL KIRIM PENILAIAN)
 function renderScoresSubTab(nik) {
     const qBody = document.getElementById("detailQuizScoreBody");
     const aBody = document.getElementById("detailAsesorScoreBody");
@@ -810,7 +808,7 @@ function renderScoresSubTab(nik) {
     let quizSum = 0;
 
     if (quizList.length === 0) {
-        qBody.innerHTML = `<tr><td colspan="3" class="text-center">Belum ada riwayat kuis / tes praktik.</td></tr>`;
+        qBody.innerHTML = `<tr><td colspan="3" class="text-center">Belum ada riwayat kuis.</td></tr>`;
     } else {
         quizList.forEach(q => {
             quizSum += q.score;
@@ -828,19 +826,20 @@ function renderScoresSubTab(nik) {
     currentDetailAvgQuiz = quizList.length > 0 ? Math.round(quizSum / quizList.length) : 0;
     document.getElementById("subQuizAvg").innerText = currentDetailAvgQuiz;
 
+    // Default 3 Evaluator: Supervisor, Asst. Manager, HRD
     const asesorList = db.evaluatorAssessments[nik] || [
-        { bidang: "SOP & Kinerja Praktik", evaluatorName: "Pak Rudi (HRD)", score: 85, note: "Paham alur operasional dasar." },
-        { bidang: "Komunikasi & Disiplin", evaluatorName: "Bu Widya (Recruitment)", score: 82, note: "Koordinasi aktif dan rapi." },
-        { bidang: "Kualitas Tugas Praktik Akhir", evaluatorName: "Frengky (Manager Ops)", score: 80, note: "Pengerjaan tugas sesuai standar." }
+        { jabatanPenilai: "Supervisor", evaluatorName: "Pak Rudi (SPV)", score: 85, note: "Paham alur operasional dasar." },
+        { jabatanPenilai: "Asst. Manager", evaluatorName: "Frengky (Asst. Manager)", score: 82, note: "Koordinasi aktif dan rapi." },
+        { jabatanPenilai: "HRD", evaluatorName: "Emma (Manager HRD)", score: 80, note: "Pengerjaan tugas sesuai standar." }
     ];
 
     asesorList.forEach(a => {
         aBody.innerHTML += `
             <tr>
-                <td><input type="text" class="evaluator-input" value="${a.bidang}"></td>
-                <td><input type="text" class="evaluator-input" value="${a.evaluatorName}"></td>
+                <td><input type="text" class="evaluator-input" value="${a.jabatanPenilai}" placeholder="Jabatan Penilai"></td>
+                <td><input type="text" class="evaluator-input" value="${a.evaluatorName}" placeholder="Nama Evaluator"></td>
                 <td><input type="number" class="evaluator-input text-center sub-eval-score-field" value="${a.score}" min="0" max="100" onchange="calculateSubEvaluatorScore()"></td>
-                <td><input type="text" class="evaluator-input" value="${a.note}"></td>
+                <td><input type="text" class="evaluator-input" value="${a.note}" placeholder="Catatan evaluasi..."></td>
                 <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove(); calculateSubEvaluatorScore();"></i></td>
             </tr>
         `;
@@ -852,7 +851,7 @@ function renderScoresSubTab(nik) {
 function addSubEvaluatorRow() {
     document.getElementById("detailAsesorScoreBody").innerHTML += `
         <tr>
-            <td><input type="text" class="evaluator-input" placeholder="Bidang Materi"></td>
+            <td><input type="text" class="evaluator-input" placeholder="Supervisor / Asst. Manager / HRD"></td>
             <td><input type="text" class="evaluator-input" placeholder="Nama Evaluator"></td>
             <td><input type="number" class="evaluator-input text-center sub-eval-score-field" value="80" min="0" max="100" onchange="calculateSubEvaluatorScore()"></td>
             <td><input type="text" class="evaluator-input" placeholder="Catatan evaluator..."></td>

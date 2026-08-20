@@ -1,6 +1,7 @@
 // =========================================================================
 // DATABASE DUMMY LENGKAP & RELASIONAL - FAT TRAINING CENTER
-// Data Handout: 4 Paket Sesuai dengan Master Training (Finance, Legal, HR, Operasional)
+// Master Quiz: 3 Tipe Soal Mandiri (PG, Essai, & Tes Praktik PDF)
+// Evaluasiku: Penilai (Supervisor, Asst. Manager, HRD) & Kuis Karyawan (PG & Essai)
 // =========================================================================
 
 const db = {
@@ -371,7 +372,7 @@ const db = {
     ],
 
     // ---------------------------------------------------------------------
-    // 2. MASTER TRAINING (4 PAKET MATERI)
+    // 2. MASTER TRAINING
     // ---------------------------------------------------------------------
     masterTrainingList: [
         {
@@ -422,9 +423,10 @@ const db = {
     ],
 
     // ---------------------------------------------------------------------
-    // 3. MASTER QUIZ
+    // 3. MASTER QUIZ (3 TIPE: PILIHAN GANDA, ESSAI, DAN TES PRAKTIK)
     // ---------------------------------------------------------------------
     quizzes: [
+        // --- 1. PILIHAN GANDA ---
         {
             id: 1,
             title: "Quiz PG: Piutang & Komisi KPR Finance",
@@ -472,6 +474,8 @@ const db = {
                 { id: 1, question: "Modul pelatihan di Brighton UNI dinyatakan tuntas jika?", options: ["a. Membaca materi & lulus Quiz score >= Passing Grade", "b. Login saja", "c. Mengunduh jadwal"], keyAnswer: "a" }
             ]
         },
+
+        // --- 2. ESSAI ---
         {
             id: 5,
             title: "Quiz Essai: Studi Kasus Piutang & DP Finance",
@@ -516,6 +520,8 @@ const db = {
                 { id: 1, question: "Jelaskan langkah menarik data progress report kelas siswa di portal Brighton UNI!", keyAnswer: "Buka menu Admin Brighton UNI -> Reports -> Filter Divisi/Cabang -> Export Data Table Excel." }
             ]
         },
+
+        // --- 3. TES PRAKTIK (UPLOAD PDF PANDUAN) ---
         {
             id: 9,
             title: "Tes Praktik: Simulasi Jurnal Piutang & Pembuatan Kuitansi",
@@ -559,7 +565,7 @@ const db = {
     ],
 
     // ---------------------------------------------------------------------
-    // 4. DATA HANDOUT (4 PAKET SERAGAM DENGAN MASTER TRAINING)
+    // 4. DATA HANDOUT (4 PAKET)
     // ---------------------------------------------------------------------
     masterHandoutList: [
         {
@@ -732,42 +738,45 @@ const db = {
     },
 
     // ---------------------------------------------------------------------
-    // 8. NILAI QUIZ & TES PRAKTIK PER KARYAWAN (40% BOBOT)
+    // 8. NILAI QUIZ PER KARYAWAN (HANYA DUMMY PILIHAN GANDA & ESSAI)
     // ---------------------------------------------------------------------
     evaluations: [
+        // CLAUDIA AMANDA (BPI) - LULUS
         { nik: "205260954", materi: "Quiz PG: Legalitas Properti & Pengisian MOU", score: 95, status: "LULUS" },
         { nik: "205260954", materi: "Quiz PG: Standar Promosi & Brighton App", score: 92, status: "LULUS" },
         { nik: "205260954", materi: "Quiz PG: Sosialisasi Sistem Brighton UNI", score: 94, status: "LULUS" },
-        { nik: "205260954", materi: "Tes Praktik: Perancangan & Analisis Draf MOU Properti", score: 96, status: "LULUS" },
+        { nik: "205260954", materi: "Quiz Essai: Penyelesaian Sengketa Klausul MOU Legal", score: 96, status: "LULUS" },
 
+        // MITIA EKA RENISA (UNI)
         { nik: "208260972", materi: "Quiz PG: Sosialisasi Sistem Brighton UNI", score: 85, status: "LULUS" },
         { nik: "208260972", materi: "Quiz PG: Standar Promosi & Brighton App", score: 82, status: "LULUS" },
-        { nik: "208260972", materi: "Tes Praktik: Penaikan & Rekonsiliasi Data Brighton UNI", score: 85, status: "LULUS" },
         { nik: "208260972", materi: "Quiz PG: Piutang & Komisi KPR Finance", score: 80, status: "LULUS" },
+        { nik: "208260972", materi: "Quiz Essai: Penarikan & Analisa Data Report Brighton UNI", score: 85, status: "LULUS" },
 
+        // KHOIRUNNISA (FINANCE)
         { nik: "208260973", materi: "Quiz PG: Piutang & Komisi KPR Finance", score: 75, status: "TIDAK LULUS" },
-        { nik: "208260973", materi: "Tes Praktik: Simulasi Jurnal Piutang & Pembuatan Kuitansi", score: 75, status: "TIDAK LULUS" },
-        { nik: "208260973", materi: "Quiz PG: Sosialisasi Sistem Brighton UNI", score: 80, status: "LULUS" }
+        { nik: "208260973", materi: "Quiz PG: Sosialisasi Sistem Brighton UNI", score: 80, status: "LULUS" },
+        { nik: "208260973", materi: "Quiz Essai: Studi Kasus Piutang & DP Finance", score: 75, status: "TIDAK LULUS" }
     ],
 
     // ---------------------------------------------------------------------
-    // 9. PENILAIAN 3 ASESOR (60% BOBOT)
+    // 9. PENILAIAN 3 EVALUATOR (JABATAN PENILAI: SUPERVISOR, ASST. MANAGER, HRD)
     // ---------------------------------------------------------------------
     evaluatorAssessments: {
         "205260954": [ // Claudia Amanda
-            { bidang: "Verifikasi Legalitas & Analisis MOU", evaluatorName: "Rudiyanto (Asst. Manager)", score: 95, note: "Pemeriksaan berkas hukum sangat teliti dan akurat tanpa kesalahan." },
-            { bidang: "Kepatuhan Hukum & Sengketa", evaluatorName: "Pak Rudi (HRD)", score: 94, note: "Sangat menguasai prosedur penyelesaian sengketa transaksi." },
-            { bidang: "Kualitas Lembar Tugas Praktik", evaluatorName: "Emma (Manager HRD)", score: 96, note: "Pengerjaan tugas praktik perancangan MOU luar biasa rapi." }
+            { jabatanPenilai: "Supervisor", evaluatorName: "Rudiyanto (SPV Legal)", score: 95, note: "Pemeriksaan berkas hukum sangat teliti dan akurat tanpa kesalahan." },
+            { jabatanPenilai: "Asst. Manager", evaluatorName: "Frengky (Asst. Manager)", score: 94, note: "Sangat menguasai prosedur penyelesaian sengketa transaksi." },
+            { jabatanPenilai: "HRD", evaluatorName: "Emma (Manager HRD)", score: 96, note: "Pengerjaan tugas praktik perancangan MOU luar biasa rapi." }
         ],
-        "208260972": [
-            { bidang: "Praktik Pengoperasian Brighton UNI", evaluatorName: "Pak Rudi (HRD)", score: 85, note: "Paham alur pendaftaran dan guideline kelas." },
-            { bidang: "Komunikasi & Pelayanan", evaluatorName: "Widya (Recruitment)", score: 85, note: "Sikap ramah dan koordinasi baik." },
-            { bidang: "Kepatuhan Tugas Praktik", evaluatorName: "Frengky (Manager Ops)", score: 80, note: "Upload berkas tepat waktu." }
+        "208260972": [ // Mitia
+            { jabatanPenilai: "Supervisor", evaluatorName: "Pak Rudi (SPV)", score: 85, note: "Paham alur pendaftaran dan guideline kelas." },
+            { jabatanPenilai: "Asst. Manager", evaluatorName: "Frengky (Asst. Manager)", score: 82, note: "Sikap ramah dan koordinasi baik." },
+            { jabatanPenilai: "HRD", evaluatorName: "Widya (HRD Officer)", score: 85, note: "Pengerjaan tugas tepat waktu." }
         ],
-        "208260973": [
-            { bidang: "Praktik Jurnal Kas & Piutang", evaluatorName: "Anggit (Finance SPV)", score: 75, note: "Masih butuh ketelitian pada verifikasi DP." },
-            { bidang: "SOP Administrasi BSD", evaluatorName: "Pak Rudi (HRD)", score: 75, note: "Disiplin kerja cukup baik." },
-            { bidang: "Reporting Finance", evaluatorName: "Frengky (Manager Ops)", score: 70, note: "Perlu bimbingan draf invoice." }
+        "208260973": [ // Khoirunnisa
+            { jabatanPenilai: "Supervisor", evaluatorName: "Anggit (SPV Finance)", score: 75, note: "Masih butuh ketelitian pada verifikasi DP." },
+            { jabatanPenilai: "Asst. Manager", evaluatorName: "Rudiyanto (Asst. Manager)", score: 75, note: "Disiplin kerja cukup baik." },
+            { jabatanPenilai: "HRD", evaluatorName: "Pak Rudi (HRD)", score: 70, note: "Perlu bimbingan draf invoice." }
         ]
     }
 };
