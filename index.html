@@ -4,16 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAT - Audit Program | HR Training Center</title>
+    <!-- FontAwesome Icon CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="app-container">
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR NAVIGATION -->
         <aside class="sidebar">
-            <div class="brand"><h2>FAT - Audit Program</h2></div>
-            <div class="user-profile"><i class="fa-solid fa-circle-user"></i> <span>Hi abdul zidan</span></div>
+            <div class="brand">
+                <h2>FAT - Audit Program</h2>
+            </div>
+            <div class="user-profile">
+                <i class="fa-solid fa-circle-user"></i> <span>Hi abdul zidan</span>
+            </div>
             <nav class="sidebar-menu">
                 <ul>
                     <li><a href="#"><i class="fa-solid fa-comment-dots"></i> Dashboard Info</a></li>
@@ -29,10 +34,15 @@
 
         <!-- MAIN CONTENT AREA -->
         <main class="main-content">
+            <!-- TOPBAR HEADER -->
             <header class="topbar">
-                <div class="page-title"><h1>HR Training</h1></div>
+                <div class="page-title">
+                    <h1>HR Training</h1>
+                </div>
                 <div class="topbar-right">
-                    <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i></div>
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
                     <ul class="nav-tabs">
                         <li class="tab-item" onclick="switchMainTab('master-training', this)">Master Training</li>
                         <li class="tab-item" onclick="switchMainTab('quiz', this)">Master Quiz</li>
@@ -44,7 +54,9 @@
 
             <div class="content-body">
 
-                <!-- TAB 1: MASTER TRAINING -->
+                <!-- ======================================================= -->
+                <!-- TAB 1: MASTER TRAINING                                  -->
+                <!-- ======================================================= -->
                 <div id="tab-master-training" class="tab-view">
                     <div id="master-list-view">
                         <div class="action-bar">
@@ -70,6 +82,7 @@
                         </div>
                     </div>
 
+                    <!-- FORM DETAIL: MASTER TRAINING BUILDER -->
                     <div id="master-detail-view" class="detail-form-container" style="display: none;">
                         <div class="breadcrumb">&lt; Master Training / <strong>#1 Builder</strong> <span class="tab-sub-right">Main</span></div>
                         <form onsubmit="saveMasterData(event)">
@@ -78,11 +91,30 @@
                                     <label class="row-label">Nama Paket Materi</label>
                                     <input type="text" id="masterPaketNameInput" class="form-control-inline" placeholder="Contoh: Paket Onboarding Finance" required>
                                 </div>
+                                
+                                <!-- INPUT PILIHAN DIVISI DENGAN DROPDOWN + TAGS -->
                                 <div class="form-row">
                                     <label class="row-label">Divisi</label>
-                                    <div class="tag-input-container" id="masterDivisiTags"></div>
+                                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                                        <div style="display: flex; gap: 5px; align-items: center;">
+                                            <select id="masterDivisiSelect" class="form-select-inline">
+                                                <option value="">-- Pilih Divisi --</option>
+                                                <option value="BPI">BPI</option>
+                                                <option value="FINANCE">FINANCE</option>
+                                                <option value="OPERASIONAL">OPERASIONAL</option>
+                                                <option value="HRD">HRD</option>
+                                                <option value="UNI">UNI</option>
+                                                <option value="IT">IT</option>
+                                                <option value="EVENT">EVENT</option>
+                                                <option value="MARKOM">MARKOM</option>
+                                            </select>
+                                            <button type="button" class="btn btn-secondary btn-xs" onclick="addMasterDivisiTag()"><i class="fa-solid fa-plus"></i> Tambah Divisi</button>
+                                        </div>
+                                        <div class="tag-input-container" id="masterDivisiTags"></div>
+                                    </div>
                                     <span class="sub-note">bisa lebih dari 1 divisi</span>
                                 </div>
+
                                 <div class="form-row">
                                     <label class="row-label">Masa Kerja</label>
                                     <div class="radio-group">
@@ -91,9 +123,22 @@
                                         <label><input type="radio" name="mk_master" value=">3 bln"> >3 bln</label>
                                     </div>
                                 </div>
+
+                                <!-- INPUT PILIHAN JABATAN DENGAN DROPDOWN + TAGS -->
                                 <div class="form-row">
                                     <label class="row-label">Jabatan</label>
-                                    <div class="tag-input-container" id="masterJabatanTags"></div>
+                                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                                        <div style="display: flex; gap: 5px; align-items: center;">
+                                            <select id="masterJabatanSelect" class="form-select-inline">
+                                                <option value="">-- Pilih Jabatan --</option>
+                                                <option value="Staff">Staff</option>
+                                                <option value="Supervisor">Supervisor</option>
+                                                <option value="Asst. Manager">Asst. Manager</option>
+                                            </select>
+                                            <button type="button" class="btn btn-secondary btn-xs" onclick="addMasterJabatanTag()"><i class="fa-solid fa-plus"></i> Tambah Jabatan</button>
+                                        </div>
+                                        <div class="tag-input-container" id="masterJabatanTags"></div>
+                                    </div>
                                     <span class="sub-note">bisa lebih dari 1 jabatan</span>
                                 </div>
                             </div>
@@ -108,7 +153,12 @@
                                 </div>
                                 <table class="data-table">
                                     <thead>
-                                        <tr><th>Title</th><th>Tipe</th><th>Description</th><th class="text-center">Aksi</th></tr>
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Tipe</th>
+                                            <th>Description</th>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
                                     </thead>
                                     <tbody id="skillTableBody"></tbody>
                                 </table>
@@ -122,7 +172,9 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: MASTER QUIZ -->
+                <!-- ======================================================= -->
+                <!-- TAB 2: MASTER QUIZ (PG, ESSAI, & TES PRAKTIK)           -->
+                <!-- ======================================================= -->
                 <div id="tab-quiz" class="tab-view">
                     <div id="quiz-list-view">
                         <div class="action-bar">
@@ -149,6 +201,7 @@
                         </div>
                     </div>
 
+                    <!-- FORM DETAIL BUILDER QUIZ -->
                     <div id="quiz-detail-view" class="detail-form-container" style="display: none;">
                         <div class="breadcrumb">&lt; Master Quiz Training / <strong>#1 Builder Bank Soal & Tes Praktik</strong> <span class="tab-sub-right">Bank Soal</span></div>
                         <form onsubmit="saveQuizData(event)">
@@ -179,6 +232,7 @@
                                 </div>
                             </div>
 
+                            <!-- 1. TABEL SOAL PILIHAN GANDA -->
                             <div class="table-card" id="pgCardSection">
                                 <div class="card-header-bar flex-between" style="background:#2980b9;">
                                     <span><i class="fa-solid fa-list-ul"></i> Daftar Soal Pilihan Ganda (Multiple Choice)</span>
@@ -197,6 +251,7 @@
                                 </table>
                             </div>
 
+                            <!-- 2. TABEL SOAL ESSAI -->
                             <div class="table-card" id="essaiCardSection" style="display: none;">
                                 <div class="card-header-bar flex-between" style="background:#6f42c1;">
                                     <span><i class="fa-solid fa-pen-nib"></i> Daftar Soal Essai (Uraian / Studi Kasus)</span>
@@ -215,6 +270,7 @@
                                 </table>
                             </div>
 
+                            <!-- 3. SECTION KHUSUS UPLOAD BERKAS PDF TES PRAKTIK -->
                             <div class="table-card" id="praktikCardSection" style="display: none;">
                                 <div class="card-header-bar flex-between" style="background:#27ae60;">
                                     <span><i class="fa-solid fa-file-pdf"></i> Upload Berkas Lembar Soal & Panduan Tes Praktik (PDF)</span>
@@ -227,7 +283,7 @@
                                     <div class="form-group margin-top">
                                         <label>Pilih File PDF Panduan / Lembar Soal Praktik:</label>
                                         <input type="file" id="praktikPdfFile" class="form-control-inline" style="width:100%;" accept=".pdf">
-                                        <span class="sub-note" style="margin-left:0; margin-top:4px;">Berkas PDF ini akan diunduh dan dikerjakan oleh Karyawan pada menu Evaluasiku.</span>
+                                        <span class="sub-note" style="margin-left:0; margin-top:4px;">Berkas PDF ini akan diunduh dan dikerjakan oleh siswa pada menu Evaluasiku.</span>
                                     </div>
                                 </div>
                             </div>
@@ -240,7 +296,9 @@
                     </div>
                 </div>
 
-                <!-- TAB 3: MASTER HANDOUT -->
+                <!-- ======================================================= -->
+                <!-- TAB 3: MASTER HANDOUT                                   -->
+                <!-- ======================================================= -->
                 <div id="tab-master-handout" class="tab-view">
                     <div id="handout-list-view">
                         <div class="action-bar">
@@ -252,7 +310,13 @@
                             <div class="table-header-info" id="handoutHeaderInfo">View 1-1 of 1</div>
                             <table class="data-table">
                                 <thead>
-                                    <tr><th>Nama Paket Handout</th><th>Divisi & Jabatan</th><th>Masa Kerja</th><th>Total Karyawan</th><th class="text-center">Aksi</th></tr>
+                                    <tr>
+                                        <th>Nama Paket Handout</th>
+                                        <th>Divisi & Jabatan</th>
+                                        <th>Masa Kerja</th>
+                                        <th>Total Karyawan</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
                                 </thead>
                                 <tbody id="handoutGridBody"></tbody>
                             </table>
@@ -342,10 +406,12 @@
                     </div>
                 </div>
 
-                <!-- TAB 4: EVALUASIKU (DILENGKAPI SUB-TAB REVIEW 4K) -->
+                <!-- ======================================================= -->
+                <!-- TAB 4: EVALUASIKU (FILES, REVIEW 4K, & NILAI)           -->
+                <!-- ======================================================= -->
                 <div id="tab-evaluasiku" class="tab-view active">
                     
-                    <!-- 1. VIEW DATA GRID EVALUASIKU -->
+                    <!-- 1. DATA GRID TABEL EVALUASIKU -->
                     <div id="eval-grid-view">
                         <div class="action-bar">
                             <button class="btn btn-success"><i class="fa-solid fa-circle-check"></i> Approve Terpilih</button>
@@ -376,7 +442,7 @@
                         </div>
                     </div>
 
-                    <!-- 2. VIEW DETAIL EVALUASIKU -->
+                    <!-- 2. DETAIL VIEW EVALUASIKU -->
                     <div id="eval-detail-view" style="display: none;">
                         
                         <div class="detail-header-card">
@@ -386,7 +452,6 @@
                             </div>
                             <div class="eval-sub-tabs">
                                 <span class="eval-sub-tab active" onclick="switchEvalSubTab('files', this)"><i class="fa-solid fa-folder-open"></i> Files & Jawaban Essai</span>
-                                <!-- SUB-TAB BARU: REVIEW 4K (DI KANAN FILES & JAWABAN ESSAI) -->
                                 <span class="eval-sub-tab" onclick="switchEvalSubTab('review4k', this)"><i class="fa-solid fa-star-half-stroke"></i> Review 4K</span>
                                 <span class="eval-sub-tab" onclick="switchEvalSubTab('scores', this)"><i class="fa-solid fa-chart-simple"></i> Nilai</span>
                             </div>
@@ -395,6 +460,7 @@
                         <!-- SUB-TAB 1: FILES & LEMBAR JAWABAN ESSAI -->
                         <div id="eval-sub-content-files" class="eval-sub-content active">
                             <div class="files-dual-layout margin-top">
+                                <!-- Panel Kiri: Kumpulan PDF Tugas Praktik -->
                                 <div class="files-left-card form-card">
                                     <div class="table-sub-title flex-between">
                                         <span><i class="fa-solid fa-file-pdf"></i> Kumpulan PDF Lembar Tugas Praktik</span>
@@ -403,6 +469,7 @@
                                     <div id="filesContainerList" style="margin-top: 10px;"></div>
                                 </div>
 
+                                <!-- Panel Kanan: Berkas Pengerjaan Jawaban Essai -->
                                 <div class="files-right-card form-card">
                                     <div class="table-sub-title flex-between">
                                         <span><i class="fa-solid fa-file-pen"></i> Berkas Pengerjaan Jawaban Soal Essai</span>
@@ -413,18 +480,18 @@
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 2: REVIEW 4K (FORM ADMIN DENGAN PERIODE BULAN 1, 2, 3) -->
+                        <!-- SUB-TAB 2: REVIEW 4K (BULAN 1, 2, 3) -->
                         <div id="eval-sub-content-review4k" class="eval-sub-content">
                             <div class="margin-top">
                                 <!-- TAB PERIODE BULAN -->
                                 <div class="periode-tabs-container">
-                                    <div class="periode-tab-btn active" onclick="switchPeriodeTab('bulan1', this)"><i class="fa-solid fa-calendar-check"></i> Evaluasi Bulan 1 (Selesai)</div>
-                                    <div class="periode-tab-btn" onclick="switchPeriodeTab('bulan2', this)"><i class="fa-solid fa-calendar-day"></i> Evaluasi Bulan 2 (Draft)</div>
-                                    <div class="periode-tab-btn" onclick="switchPeriodeTab('bulan3', this)"><i class="fa-solid fa-calendar-day"></i> Evaluasi Bulan 3 (Draft)</div>
+                                    <div class="periode-tab-btn active" onclick="switchPeriodeTab('bulan1', this)"><i class="fa-solid fa-calendar-check"></i> Evaluasi Bulan 1</div>
+                                    <div class="periode-tab-btn" onclick="switchPeriodeTab('bulan2', this)"><i class="fa-solid fa-calendar-day"></i> Evaluasi Bulan 2</div>
+                                    <div class="periode-tab-btn" onclick="switchPeriodeTab('bulan3', this)"><i class="fa-solid fa-calendar-day"></i> Evaluasi Bulan 3</div>
                                 </div>
 
                                 <div class="review4k-layout margin-top">
-                                    <!-- Form Pengisian 4K oleh Admin/Leader -->
+                                    <!-- Form Input 4K -->
                                     <div class="review4k-left form-card">
                                         <div class="table-sub-title flex-between">
                                             <span><i class="fa-solid fa-user-check"></i> Form Penilaian 4K Leader (Skala 1.0 – 5.0)</span>
@@ -438,7 +505,7 @@
                                                     <div class="ind-title"><i class="fa-solid fa-shield-heart" style="color:#e67e22;"></i> 1. Karakter (Character)</div>
                                                     <div class="ind-score-input">
                                                         <label>Nilai (1-5):</label>
-                                                        <input type="number" id="k1_score" min="1.0" max="5.0" step="0.1" value="4.5" onchange="calculate4KAverage()">
+                                                        <input type="number" id="k1_score" min="1.0" max="5.0" step="0.1" value="4.8" onchange="calculate4KAverage()">
                                                     </div>
                                                 </div>
                                                 <p class="ind-desc">Integritas, kejujuran, etika profesi, serta sikap positif terhadap budaya kerja perusahaan.</p>
@@ -451,7 +518,7 @@
                                                     <div class="ind-title"><i class="fa-solid fa-handshake" style="color:#2980b9;"></i> 2. Komitmen (Commitment)</div>
                                                     <div class="ind-score-input">
                                                         <label>Nilai (1-5):</label>
-                                                        <input type="number" id="k2_score" min="1.0" max="5.0" step="0.1" value="4.2" onchange="calculate4KAverage()">
+                                                        <input type="number" id="k2_score" min="1.0" max="5.0" step="0.1" value="4.7" onchange="calculate4KAverage()">
                                                     </div>
                                                 </div>
                                                 <p class="ind-desc">Disiplin jam kerja, tanggung jawab tugas, loyalitas, dan dedikasi terhadap pencapaian target.</p>
@@ -464,7 +531,7 @@
                                                     <div class="ind-title"><i class="fa-solid fa-chart-line" style="color:#27ae60;"></i> 3. Kontribusi (Contribution)</div>
                                                     <div class="ind-score-input">
                                                         <label>Nilai (1-5):</label>
-                                                        <input type="number" id="k3_score" min="1.0" max="5.0" step="0.1" value="4.0" onchange="calculate4KAverage()">
+                                                        <input type="number" id="k3_score" min="1.0" max="5.0" step="0.1" value="4.6" onchange="calculate4KAverage()">
                                                     </div>
                                                 </div>
                                                 <p class="ind-desc">Dampak nyata pengerjaan tugas, inisiatif solusi, efisiensi kerja, dan kolaborasi tim.</p>
@@ -477,7 +544,7 @@
                                                     <div class="ind-title"><i class="fa-solid fa-graduation-cap" style="color:#6f42c1;"></i> 4. Kompetensi (Competence)</div>
                                                     <div class="ind-score-input">
                                                         <label>Nilai (1-5):</label>
-                                                        <input type="number" id="k4_score" min="1.0" max="5.0" step="0.1" value="4.3" onchange="calculate4KAverage()">
+                                                        <input type="number" id="k4_score" min="1.0" max="5.0" step="0.1" value="4.9" onchange="calculate4KAverage()">
                                                     </div>
                                                 </div>
                                                 <p class="ind-desc">Keahlian teknis divisi, penguasaan SOP operasional, serta kecepatan adaptasi sistem kerja.</p>
@@ -486,19 +553,19 @@
                                         </div>
                                     </div>
 
-                                    <!-- Panel Kanan: Akumulasi Rata-rata 4K & Summary Predikat -->
+                                    <!-- Panel Kanan: Akumulasi Rata-rata 4K -->
                                     <div class="review4k-right form-card">
                                         <h3><i class="fa-solid fa-chart-pie"></i> Akumulasi Nilai Akhir 4K</h3>
                                         <div class="calculation-breakdown">
-                                            <div class="calc-row"><span>Karakter:</span> <strong id="sumK1">4.5</strong></div>
-                                            <div class="calc-row"><span>Komitmen:</span> <strong id="sumK2">4.2</strong></div>
-                                            <div class="calc-row"><span>Kontribusi:</span> <strong id="sumK3">4.0</strong></div>
-                                            <div class="calc-row"><span>Kompetensi:</span> <strong id="sumK4">4.3</strong></div>
+                                            <div class="calc-row"><span>Karakter:</span> <strong id="sumK1">4.8</strong></div>
+                                            <div class="calc-row"><span>Komitmen:</span> <strong id="sumK2">4.7</strong></div>
+                                            <div class="calc-row"><span>Kontribusi:</span> <strong id="sumK3">4.6</strong></div>
+                                            <div class="calc-row"><span>Kompetensi:</span> <strong id="sumK4">4.9</strong></div>
                                         </div>
                                         
                                         <div class="point-box">
                                             <label>Rata-rata Nilai 4K (Skala 1–5)</label>
-                                            <div class="total-score-badge score-passed" id="avg4KScoreDisplay">4.25</div>
+                                            <div class="total-score-badge score-passed" id="avg4KScoreDisplay">4.75</div>
                                             <span id="predikat4KBadge" class="badge badge-lulus margin-top" style="display:inline-block;">PREDIKAT: SANGAT BAIK</span>
                                         </div>
 
@@ -510,7 +577,7 @@
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 3: NILAI (QUIZ & ASESOR) -->
+                        <!-- SUB-TAB 3: NILAI AKHIR (QUIZ & ASESOR) -->
                         <div id="eval-sub-content-scores" class="eval-sub-content">
                             <div class="evaluasiku-layout margin-top">
                                 <div class="eval-left">
@@ -580,6 +647,9 @@
         </main>
     </div>
 
+    <!-- =============================================================== -->
+    <!-- MODAL POPUPS                                                    -->
+    <!-- =============================================================== -->
     <!-- MODAL 1: LINK BANK MATERI & QUIZ -->
     <div class="modal-overlay" id="linkMateriModal">
         <div class="modal-box">
@@ -611,7 +681,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>1) Title Materi / Skill</label>
-                        <input type="text" id="newMateriTitle" class="form-control-inline" style="width:100%;" placeholder="Contoh: PROSES SEBELUM TRANSAKSI - Surat Pengantar KPR" required>
+                        <input type="text" id="newMateriTitle" class="form-control-inline" style="width:100%;" placeholder="Contoh: Surat Pengantar KPR & Order Komisi KPR" required>
                     </div>
                     <div class="form-group">
                         <label>2) Tipe Skill</label>
@@ -655,11 +725,11 @@
         </div>
     </div>
 
-    <!-- MODAL 4: POP-UP SEMUA LEMBAR JAWABAN ESSAI Karyawan -->
+    <!-- MODAL 4: POP-UP LEMBAR JAWABAN ESSAI SISWA -->
     <div class="modal-overlay" id="essaiViewerModal">
         <div class="modal-box" style="width: 750px; max-width: 90%;">
             <div class="modal-header" style="background:#6f42c1;">
-                <h3 id="essaiModalTitle"><i class="fa-solid fa-file-signature"></i> Lembar Jawaban Soal Essai Karyawan</h3>
+                <h3 id="essaiModalTitle"><i class="fa-solid fa-file-signature"></i> Lembar Jawaban Soal Essai Siswa</h3>
                 <span class="close-btn" onclick="closeEssaiViewerModal()">&times;</span>
             </div>
             <div class="modal-body" style="padding: 15px; max-height: 480px; overflow-y: auto;">
@@ -672,6 +742,7 @@
         </div>
     </div>
 
+    <!-- SCRIPT INCLUSION (SINKRON KE script.js) -->
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>

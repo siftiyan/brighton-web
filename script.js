@@ -1,94 +1,224 @@
+/**
+ * =========================================================================
+ * FAT - AUDIT PROGRAM & HR TRAINING CENTER SYSTEM
+ * Master Application Engine (script.js)
+ * =========================================================================
+ */
+
+let currentActiveEvalNik = null;
+let currentActivePeriode = "bulan1";
+let currentDetailAvgQuiz = 0;
+let currentDetailAvgEval = 0;
+
 document.addEventListener("DOMContentLoaded", () => {
     renderMasterGrid();
     renderQuizGrid();
     renderHandoutGrid();
     renderEvaluasikuGrid();
+    initGlobalEventListeners();
+    console.log("FAT - HR Training & Evaluation System initialized successfully.");
 });
 
-// ==========================================================================
-// 1. MAIN TAB SWITCHER & DETAIL VIEWS
-// ==========================================================================
-function switchMainTab(tabId, el) {
-    document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+function initGlobalEventListeners() {
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            closeFileViewerModal();
+            closeEssaiViewerModal();
+            closeUploadMateriModal();
+            closeLinkMateriModal();
+        }
+    });
 
-    document.getElementById(`tab-${tabId}`).classList.add('active');
-    el.classList.add('active');
+    const modals = document.querySelectorAll(".modal-overlay");
+    modals.forEach((modal) => {
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                const videoElement = modal.querySelector("video");
+                if (videoElement) videoElement.pause();
+            }
+        });
+    });
+}
+
+// =========================================================================
+// 1. MAIN NAVIGATION TABS CONTROLLER
+// =========================================================================
+function switchMainTab(tabId, element) {
+    document.querySelectorAll(".tab-view").forEach(v => v.classList.remove("active"));
+    document.querySelectorAll(".nav-tabs .tab-item").forEach(t => t.classList.remove("active"));
+
+    const targetView = document.getElementById(`tab-${tabId}`);
+    if (targetView) targetView.classList.add("active");
+    if (element) element.classList.add("active");
+
     closeDetailViews();
     closeEvalDetailView();
 }
 
 function closeDetailViews() {
-    const mlv = document.getElementById("master-list-view");
-    const mdv = document.getElementById("master-detail-view");
-    const qlv = document.getElementById("quiz-list-view");
-    const qdv = document.getElementById("quiz-detail-view");
-    const hlv = document.getElementById("handout-list-view");
-    const hdv = document.getElementById("handout-detail-view");
+    const ml = document.getElementById("master-list-view");
+    const md = document.getElementById("master-detail-view");
+    if (ml && md) { ml.style.display = "block"; md.style.display = "none"; }
 
-    if(mlv) mlv.style.display = "block";
-    if(mdv) mdv.style.display = "none";
-    if(qlv) qlv.style.display = "block";
-    if(qdv) qdv.style.display = "none";
-    if(hlv) hlv.style.display = "block";
-    if(hdv) hdv.style.display = "none";
+    const ql = document.getElementById("quiz-list-view");
+    const qd = document.getElementById("quiz-detail-view");
+    if (ql && qd) { ql.style.display = "block"; qd.style.display = "none"; }
+
+    const hl = document.getElementById("handout-list-view");
+    const hd = document.getElementById("handout-detail-view");
+    if (hl && hd) { hl.style.display = "block"; hd.style.display = "none"; }
 }
 
-// ==========================================================================
-// 2. MASTER TRAINING
-// ==========================================================================
+// =========================================================================
+// 2. MASTER TRAINING MODULE (INPUT TAG DIVISI & JABATAN)
+// =========================================================================
 function renderMasterGrid() {
     const tbody = document.getElementById("masterGridBody");
-    if(!tbody) return;
+    if (!tbody) return;
     tbody.innerHTML = "";
 
+    if (!db.masterTrainingList || db.masterTrainingList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center">Belum ada data master training.</td></tr>`;
+        return;
+    }
+
     db.masterTrainingList.forEach((item) => {
+        const jabatanText = Array.isArray(item.jabatan) ? item.jabatan.join(", ") : item.jabatan;
         tbody.innerHTML += `
             <tr>
                 <td><strong>${item.paketMateri}</strong></td>
                 <td>${item.divisi}</td>
-                <td>${item.jabatan.join(", ")}</td>
+                <td>${jabatanText}</td>
                 <td>${item.masaKerja}</td>
                 <td class="text-center">
-                    <i class="fa-solid fa-pen-to-square" style="cursor:pointer; color:#7f8c8d;" onclick="openMasterDetail(${item.id})"></i>
-                    <i class="fa-solid fa-circle-xmark" style="cursor:pointer; color:#c0392b; margin-left:5px;"></i>
+                    <i class="fa-solid fa-pen-to-square" title="Edit Data" style="cursor:pointer; color:#7f8c8d; margin-right:6px;" onclick="openMasterDetail(${item.id})"></i>
+                    <i class="fa-solid fa-circle-xmark" title="Hapus Paket" style="cursor:pointer; color:#c0392b;" onclick="deleteMasterTrainingItem(${item.id})"></i>
                 </td>
             </tr>
         `;
     });
 
     const infoText = `View 1-${db.masterTrainingList.length} of ${db.masterTrainingList.length}`;
-    document.getElementById("masterHeaderInfo").innerText = infoText;
-    document.getElementById("masterFooterInfo").innerText = infoText;
+    const headerInfo = document.getElementById("masterHeaderInfo");
+    const footerInfo = document.getElementById("masterFooterInfo");
+    if (headerInfo) headerInfo.innerText = infoText;
+    if (footerInfo) footerInfo.innerText = infoText;
 }
 
 function openMasterDetail(id) {
     document.getElementById("master-list-view").style.display = "none";
     document.getElementById("master-detail-view").style.display = "block";
 
-    const data = db.masterTrainingList.find(m => m.id === id) || db.masterTrainingList[0];
+    let data = null;
+    if (id === 'new') {
+        data = {
+            id: Date.now(),
+            divisi: ["FINANCE"],
+            paketMateri: "",
+            masaKerja: "All",
+            jabatan: ["Staff"],
+            skills: []
+        };
+    } else {
+        data = db.masterTrainingList.find(m => m.id === id) || db.masterTrainingList[0];
+    }
 
     document.getElementById("masterPaketNameInput").value = data.paketMateri;
-    renderTags("masterDivisiTags", Array.isArray(data.divisi) ? data.divisi : [data.divisi]);
+
+    let divArray = Array.isArray(data.divisi) ? data.divisi : data.divisi.split(",").map(s => s.trim());
+    renderTags("masterDivisiTags", divArray);
     renderTags("masterJabatanTags", data.jabatan);
 
+    const mkRadios = document.querySelectorAll('input[name="mk_master"]');
+    mkRadios.forEach(r => { r.checked = (r.value === data.masaKerja); });
+
+    renderSkillTableBody(data.skills);
+}
+
+function addMasterDivisiTag() {
+    const select = document.getElementById("masterDivisiSelect");
+    const val = select.value;
+    if (!val) return;
+
+    const container = document.getElementById("masterDivisiTags");
+    const existing = Array.from(container.querySelectorAll(".tag-item")).map(t => t.innerText.replace('×', '').trim());
+    if (!existing.includes(val)) {
+        container.innerHTML += `
+            <span class="tag-item">
+                ${val} <span class="close-tag" onclick="this.parentElement.remove()">&times;</span>
+            </span>
+        `;
+    }
+    select.value = "";
+}
+
+function addMasterJabatanTag() {
+    const select = document.getElementById("masterJabatanSelect");
+    const val = select.value;
+    if (!val) return;
+
+    const container = document.getElementById("masterJabatanTags");
+    const existing = Array.from(container.querySelectorAll(".tag-item")).map(t => t.innerText.replace('×', '').trim());
+    if (!existing.includes(val)) {
+        container.innerHTML += `
+            <span class="tag-item">
+                ${val} <span class="close-tag" onclick="this.parentElement.remove()">&times;</span>
+            </span>
+        `;
+    }
+    select.value = "";
+}
+
+function renderSkillTableBody(skillsArray) {
     const tbody = document.getElementById("skillTableBody");
+    if (!tbody) return;
     tbody.innerHTML = "";
-    data.skills.forEach(s => {
+
+    if (!skillsArray || skillsArray.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="color:#888;">Belum ada modul materi terlampir.</td></tr>`;
+        return;
+    }
+
+    skillsArray.forEach((s) => {
         tbody.innerHTML += `
             <tr>
                 <td><strong>${s.title}</strong></td>
-                <td>${s.tipe}</td>
+                <td><span class="badge ${s.tipe === 'Hard Skill' ? 'badge-pg' : 'badge-essai'}">${s.tipe}</span></td>
                 <td>${s.description}</td>
                 <td class="text-center">
                     <div class="action-btns-group">
-                        <i class="fa-solid fa-file-lines file-icon" title="Lihat File" onclick="openDirectFileViewer('${s.title}')"></i>
-                        <i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" title="Hapus Item" onclick="this.closest('tr').remove()"></i>
+                        <i class="fa-solid fa-file-lines file-icon" title="Lihat Berkas / Preview Media" onclick="openDirectFileViewer('${s.title}')"></i>
+                        <i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" title="Hapus Modul" onclick="this.closest('tr').remove()"></i>
                     </div>
                 </td>
             </tr>
         `;
     });
+}
+
+function deleteMasterTrainingItem(id) {
+    if (confirm("Apakah Anda yakin ingin menghapus paket pelatihan ini?")) {
+        const index = db.masterTrainingList.findIndex(m => m.id === id);
+        if (index !== -1) {
+            db.masterTrainingList.splice(index, 1);
+            renderMasterGrid();
+            showNotificationToast("Paket pelatihan berhasil dihapus!");
+        }
+    }
+}
+
+function saveMasterData(e) {
+    e.preventDefault();
+    const paketName = document.getElementById("masterPaketNameInput").value;
+    if (!paketName.trim()) {
+        alert("Nama paket materi wajib diisi!");
+        return;
+    }
+
+    showNotificationToast("Master Training Berhasil Disimpan!");
+    closeDetailViews();
+    renderMasterGrid();
 }
 
 function openUploadMateriModal() {
@@ -104,84 +234,39 @@ function closeUploadMateriModal() {
 
 function submitUploadMateriModal(e) {
     e.preventDefault();
-
     const titleVal = document.getElementById("newMateriTitle").value;
     const typeVal = document.querySelector('input[name="newMateriType"]:checked').value;
     const descVal = document.getElementById("newMateriDesc").value;
 
     const tbody = document.getElementById("skillTableBody");
+    if (tbody.children.length === 1 && tbody.children[0].innerText.includes("Belum ada modul")) {
+        tbody.innerHTML = "";
+    }
+
     tbody.innerHTML += `
         <tr>
             <td><strong>${titleVal}</strong></td>
-            <td>${typeVal}</td>
+            <td><span class="badge ${typeVal === 'Hard Skill' ? 'badge-pg' : 'badge-essai'}">${typeVal}</span></td>
             <td>${descVal}</td>
             <td class="text-center">
                 <div class="action-btns-group">
-                    <i class="fa-solid fa-file-lines file-icon" title="Lihat File" onclick="openDirectFileViewer('${titleVal}')"></i>
-                    <i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" title="Hapus Item" onclick="this.closest('tr').remove()"></i>
+                    <i class="fa-solid fa-file-lines file-icon" title="Lihat Berkas" onclick="openDirectFileViewer('${titleVal}')"></i>
+                    <i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" title="Hapus Modul" onclick="this.closest('tr').remove()"></i>
                 </div>
             </td>
         </tr>
     `;
 
     closeUploadMateriModal();
-    alert("Skill & File Materi Berhasil Ditambahkan ke Tabel!");
+    showNotificationToast("Skill & File Materi Berhasil Ditambahkan!");
 }
 
-function openDirectFileViewer(title) {
-    const viewerTitle = document.getElementById("fileViewerTitle");
-    const viewerContent = document.getElementById("fileViewerContent");
-    const viewerSubtext = document.getElementById("fileViewerSubtext");
-
-    const lowerTitle = title.toLowerCase();
-
-    if (lowerTitle.includes("video") || lowerTitle.includes("tutorial") || lowerTitle.includes("brighton app")) {
-        viewerTitle.innerHTML = `<i class="fa-solid fa-file-video" style="color:#3498db;"></i> Video Preview: ${title}`;
-        viewerSubtext.innerText = "Format: MP4 Video Player";
-        viewerContent.innerHTML = `
-            <video controls autoplay style="width: 100%; height: 100%; object-fit: contain;">
-                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-            </video>
-        `;
-    } else if (lowerTitle.includes("script") || lowerTitle.includes("ppt") || lowerTitle.includes("sosialisasi") || lowerTitle.includes("materi")) {
-        viewerTitle.innerHTML = `<i class="fa-solid fa-file-powerpoint" style="color:#e67e22;"></i> Presentation Slide: ${title}`;
-        viewerSubtext.innerText = "Format: Microsoft PowerPoint (.pptx)";
-        viewerContent.innerHTML = `
-            <div style="background: #1e1e1e; color: #fff; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
-                <i class="fa-solid fa-file-powerpoint" style="font-size: 64px; color: #e67e22; margin-bottom: 15px;"></i>
-                <h4 style="font-size: 16px; margin-bottom: 8px;">${title}</h4>
-                <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Slide Presentasi Terlampir (Modul Online Viewer)</p>
-                <button class="btn btn-success" onclick="alert('Membuka slide PowerPoint...')"><i class="fa-solid fa-play"></i> Putar Slide Show</button>
-            </div>
-        `;
-    } else {
-        viewerTitle.innerHTML = `<i class="fa-solid fa-file-pdf" style="color:#e74c3c;"></i> Document Viewer: ${title}`;
-        viewerSubtext.innerText = "Format: PDF Document Viewer";
-        viewerContent.innerHTML = `
-            <iframe src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" style="width: 100%; height: 100%; border: none;"></iframe>
-        `;
-    }
-
-    document.getElementById("fileViewerModal").style.display = "flex";
-}
-
-function closeFileViewerModal() {
-    document.getElementById("fileViewerModal").style.display = "none";
-    document.getElementById("fileViewerContent").innerHTML = "";
-}
-
-function saveMasterData(e) {
-    e.preventDefault();
-    alert("Master Training Berhasil Disimpan!");
-    closeDetailViews();
-}
-
-// ==========================================================================
-// 3. MASTER QUIZ
-// ==========================================================================
+// =========================================================================
+// 3. MASTER QUIZ MODULE
+// =========================================================================
 function renderQuizGrid() {
     const tbody = document.getElementById("quizGridBody");
-    if(!tbody) return;
+    if (!tbody) return;
     tbody.innerHTML = "";
 
     db.quizzes.forEach((q) => {
@@ -207,8 +292,8 @@ function renderQuizGrid() {
                 <td>${q.passingGrade}%</td>
                 <td class="text-center">${totalDisplay}</td>
                 <td class="text-center">
-                    <i class="fa-solid fa-pen-to-square" style="cursor:pointer; color:#7f8c8d;" onclick="openQuizDetail(${q.id})"></i>
-                    <i class="fa-solid fa-circle-xmark" style="cursor:pointer; color:#c0392b; margin-left:5px;"></i>
+                    <i class="fa-solid fa-pen-to-square" title="Edit Quiz" style="cursor:pointer; color:#7f8c8d; margin-right:6px;" onclick="openQuizDetail(${q.id})"></i>
+                    <i class="fa-solid fa-circle-xmark" title="Hapus Quiz" style="cursor:pointer; color:#c0392b;" onclick="deleteQuizItem(${q.id})"></i>
                 </td>
             </tr>
         `;
@@ -221,13 +306,9 @@ function renderQuizGrid() {
 
 function toggleQuizBuilderView() {
     const selectedType = document.querySelector('input[name="builder_quiz_type"]:checked').value;
-    const pgSection = document.getElementById("pgCardSection");
-    const essaiSection = document.getElementById("essaiCardSection");
-    const praktikSection = document.getElementById("praktikCardSection");
-
-    pgSection.style.display = (selectedType === "Pilihan Ganda") ? "block" : "none";
-    essaiSection.style.display = (selectedType === "Essai") ? "block" : "none";
-    praktikSection.style.display = (selectedType === "Tes Praktik") ? "block" : "none";
+    document.getElementById("pgCardSection").style.display = (selectedType === "Pilihan Ganda") ? "block" : "none";
+    document.getElementById("essaiCardSection").style.display = (selectedType === "Essai") ? "block" : "none";
+    document.getElementById("praktikCardSection").style.display = (selectedType === "Tes Praktik") ? "block" : "none";
 }
 
 function openQuizDetail(id) {
@@ -235,13 +316,14 @@ function openQuizDetail(id) {
     document.getElementById("quiz-detail-view").style.display = "block";
 
     const data = db.quizzes.find(q => q.id === id) || db.quizzes[0];
-
     document.getElementById("quizTitleInput").value = data.title;
     document.getElementById("quizPassingGrade").value = data.passingGrade;
 
-    const radios = document.querySelectorAll('input[name="builder_quiz_type"]');
-    radios.forEach(r => {
+    document.querySelectorAll('input[name="builder_quiz_type"]').forEach(r => {
         r.checked = (r.value === data.tipeSoal);
+    });
+    document.querySelectorAll('input[name="quiz_skill_type"]').forEach(r => {
+        r.checked = (r.value === data.skillType);
     });
 
     toggleQuizBuilderView();
@@ -250,14 +332,16 @@ function openQuizDetail(id) {
     pgBody.innerHTML = "";
     if (data.tipeSoal === "Pilihan Ganda") {
         (data.questions || []).forEach((q, idx) => {
+            const optA = q.options && q.options[0] ? q.options[0] : "a. Opsi A";
+            const optB = q.options && q.options[1] ? q.options[1] : "b. Opsi B";
             pgBody.innerHTML += `
                 <tr>
                     <td>${idx + 1}</td>
                     <td><textarea class="question-textarea">${q.question}</textarea></td>
                     <td>
                         <div class="options-box">
-                            <span>${q.options[0] || 'a. Opsi A'}</span>
-                            <span>${q.options[1] || 'b. Opsi B'}</span>
+                            <span>${optA}</span>
+                            <span>${optB}</span>
                             <strong>Kunci: (${(q.keyAnswer || 'a').toUpperCase()})</strong>
                         </div>
                     </td>
@@ -290,16 +374,15 @@ function openQuizDetail(id) {
 function addPgQuestionRow() {
     const pgBody = document.getElementById("pgQuestionsTableBody");
     const count = pgBody.children.length + 1;
-
     pgBody.innerHTML += `
         <tr>
             <td>${count}</td>
             <td><textarea class="question-textarea" placeholder="Tuliskan pertanyaan pilihan ganda..."></textarea></td>
             <td>
                 <div class="options-box">
-                    <input type="text" placeholder="Option A">
-                    <input type="text" placeholder="Option B">
-                    <input type="text" placeholder="Kunci (a/b/c)" style="width: 100px;">
+                    <input type="text" placeholder="Option A" class="form-control-inline" style="width:100%;">
+                    <input type="text" placeholder="Option B" class="form-control-inline" style="width:100%;">
+                    <input type="text" placeholder="Kunci (a/b/c)" class="form-control-inline" style="width:100px;">
                 </div>
             </td>
             <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove()"></i></td>
@@ -310,29 +393,40 @@ function addPgQuestionRow() {
 function addEssaiQuestionRow() {
     const essaiBody = document.getElementById("essaiQuestionsTableBody");
     const count = essaiBody.children.length + 1;
-
     essaiBody.innerHTML += `
         <tr>
             <td>${count}</td>
-            <td><textarea class="question-textarea" placeholder="Tuliskan pertanyaan soal uraian/essai..."></textarea></td>
-            <td><textarea class="question-textarea" placeholder="Tuliskan pedoman jawaban / rubrik penilaian..."></textarea></td>
+            <td><textarea class="question-textarea" placeholder="Tuliskan pertanyaan soal uraian/studi kasus..."></textarea></td>
+            <td><textarea class="question-textarea" placeholder="Tuliskan pedoman jawaban kunci..."></textarea></td>
             <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove()"></i></td>
         </tr>
     `;
 }
 
-function saveQuizData(e) {
-    e.preventDefault();
-    alert("Master Data Quiz / Tes Praktik Berhasil Disimpan!");
-    closeDetailViews();
+function deleteQuizItem(id) {
+    if (confirm("Apakah Anda yakin ingin menghapus bank soal/tes ini?")) {
+        const index = db.quizzes.findIndex(q => q.id === id);
+        if (index !== -1) {
+            db.quizzes.splice(index, 1);
+            renderQuizGrid();
+            showNotificationToast("Bank soal/tes berhasil dihapus!");
+        }
+    }
 }
 
-// ==========================================================================
-// 4. MASTER HANDOUT
-// ==========================================================================
+function saveQuizData(e) {
+    e.preventDefault();
+    showNotificationToast("Master Data Quiz / Tes Praktik Berhasil Disimpan!");
+    closeDetailViews();
+    renderQuizGrid();
+}
+
+// =========================================================================
+// 4. MASTER HANDOUT MODULE
+// =========================================================================
 function renderHandoutGrid() {
     const tbody = document.getElementById("handoutGridBody");
-    if(!tbody) return;
+    if (!tbody) return;
     tbody.innerHTML = "";
 
     db.masterHandoutList.forEach((item) => {
@@ -343,16 +437,15 @@ function renderHandoutGrid() {
                 <td>${item.masaKerja}</td>
                 <td>Total Karyawan : ${item.totalKaryawan}</td>
                 <td class="text-center">
-                    <i class="fa-solid fa-pen-to-square" style="cursor:pointer; color:#7f8c8d;" onclick="openHandoutDetail(${item.id})"></i>
-                    <i class="fa-solid fa-circle-xmark" style="cursor:pointer; color:#c0392b; margin-left:5px;"></i>
+                    <i class="fa-solid fa-pen-to-square" style="cursor:pointer; color:#7f8c8d; margin-right:6px;" onclick="openHandoutDetail(${item.id})"></i>
+                    <i class="fa-solid fa-circle-xmark" style="color:#c0392b;" onclick="this.closest('tr').remove()"></i>
                 </td>
             </tr>
         `;
     });
 
-    const infoText = `View 1-${db.masterHandoutList.length} of ${db.masterHandoutList.length}`;
-    document.getElementById("handoutHeaderInfo").innerText = infoText;
-    document.getElementById("handoutFooterInfo").innerText = infoText;
+    document.getElementById("handoutHeaderInfo").innerText = `View 1-${db.masterHandoutList.length} of ${db.masterHandoutList.length}`;
+    document.getElementById("handoutFooterInfo").innerText = `View 1-${db.masterHandoutList.length} of ${db.masterHandoutList.length}`;
 }
 
 function openHandoutDetail(id) {
@@ -369,17 +462,17 @@ function openHandoutDetail(id) {
         mBody.innerHTML += `
             <tr>
                 <td><strong>${m.title}</strong></td>
-                <td>${m.tipe}</td>
-                <td><i class="fa-solid fa-file-pen"></i> ${m.quizTitle}</td>
+                <td><span class="badge badge-pg">${m.tipe}</span></td>
+                <td><i class="fa-solid fa-file-pen" style="color:#2980b9;"></i> ${m.quizTitle}</td>
                 <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove()"></i></td>
             </tr>
         `;
     });
 
-    const tbody = document.getElementById("employeeTableBody");
-    tbody.innerHTML = "";
+    const empBody = document.getElementById("employeeTableBody");
+    empBody.innerHTML = "";
     data.employees.forEach(emp => {
-        tbody.innerHTML += `
+        empBody.innerHTML += `
             <tr>
                 <td>${emp.name}</td>
                 <td>${emp.nickname}</td>
@@ -391,18 +484,14 @@ function openHandoutDetail(id) {
             </tr>
         `;
     });
-
-    document.getElementById("empFooterInfo").innerText = `View 1-${data.employees.length} of ${data.employees.length}`;
 }
 
 function openLinkMateriModal() {
     const dropdown = document.getElementById("selectMasterQuizDropdown");
     dropdown.innerHTML = "";
-
     db.quizzes.forEach(q => {
         dropdown.innerHTML += `<option value="${q.id}">[${q.tipeSoal}] ${q.title}</option>`;
     });
-
     document.getElementById("linkMateriModal").style.display = "flex";
 }
 
@@ -415,12 +504,11 @@ function addSelectedMateriToHandout() {
     const quizObj = db.quizzes.find(q => q.id === quizId);
 
     if (quizObj) {
-        const mBody = document.getElementById("handoutMateriTableBody");
-        mBody.innerHTML += `
+        document.getElementById("handoutMateriTableBody").innerHTML += `
             <tr>
                 <td><strong>${quizObj.materiModule}</strong></td>
-                <td>${quizObj.skillType}</td>
-                <td><i class="fa-solid fa-file-pen"></i> ${quizObj.title}</td>
+                <td><span class="badge badge-pg">${quizObj.skillType}</span></td>
+                <td><i class="fa-solid fa-file-pen" style="color:#2980b9;"></i> ${quizObj.title}</td>
                 <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove()"></i></td>
             </tr>
         `;
@@ -431,15 +519,9 @@ function addSelectedMateriToHandout() {
 function addEmployeeToHandout() {
     const name = prompt("Masukkan Nama Karyawan Penerima Handout:");
     if (!name) return;
-    const tbody = document.getElementById("employeeTableBody");
-    tbody.innerHTML += `
+    document.getElementById("employeeTableBody").innerHTML += `
         <tr>
-            <td>${name}</td>
-            <td>User</td>
-            <td>101260999</td>
-            <td>Human Resource</td>
-            <td>Staff</td>
-            <td>2026-08-01</td>
+            <td>${name}</td><td>User</td><td>101260999</td><td>FINANCE</td><td>Staff</td><td>2026-08-01</td>
             <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove()"></i></td>
         </tr>
     `;
@@ -447,22 +529,16 @@ function addEmployeeToHandout() {
 
 function saveHandoutData(e) {
     e.preventDefault();
-    alert("Paket Handout Berhasil Disimpan & Otomatis Terdistribusi!");
+    showNotificationToast("Paket Handout Berhasil Disimpan!");
     closeDetailViews();
 }
 
-// ==========================================================================
-// 5. EVALUASIKU (INTEGRASI REVIEW 4K & PERIODE BULAN)
-// ==========================================================================
-
-let currentActiveEvalNik = null;
-let currentActivePeriode = "bulan1";
-let currentDetailAvgQuiz = 0;
-let currentDetailAvgEval = 0;
-
+// =========================================================================
+// 5. EVALUASIKU MODULE (GRID VIEW, FILES, REVIEW 4K, NILAI)
+// =========================================================================
 function renderEvaluasikuGrid() {
     const tbody = document.getElementById("evaluasikuGridBody");
-    if(!tbody) return;
+    if (!tbody) return;
     tbody.innerHTML = "";
 
     db.employees.forEach((emp) => {
@@ -502,49 +578,38 @@ function openEvalDetailView(nik) {
 
     document.getElementById("eval-grid-view").style.display = "none";
     document.getElementById("eval-detail-view").style.display = "block";
-
     document.getElementById("evalDetailHeaderName").innerText = `${emp.name} (${emp.nik}) - ${emp.divisi}`;
 
-    // Render Files PDF & Essai
     renderStudentFilesTab(nik, emp.name, emp.divisi);
-
-    // Render Form 4K Default Bulan 1
     currentActivePeriode = "bulan1";
     loadReview4KData(nik, "bulan1");
-
-    // Render Nilai Quiz & Asesor
     renderScoresSubTab(nik);
 
-    // Default aktif ke Sub-Tab 'files'
     document.querySelectorAll('.eval-sub-tab')[0].click();
 }
 
 function closeEvalDetailView() {
-    const egv = document.getElementById("eval-grid-view");
-    const edv = document.getElementById("eval-detail-view");
-    if(egv) egv.style.display = "block";
-    if(edv) edv.style.display = "none";
+    document.getElementById("eval-grid-view").style.display = "block";
+    document.getElementById("eval-detail-view").style.display = "none";
 }
 
-function switchEvalSubTab(subTabName, el) {
+function switchEvalSubTab(subTabName, element) {
     document.querySelectorAll('.eval-sub-content').forEach(c => c.classList.remove('active'));
     document.querySelectorAll('.eval-sub-tab').forEach(t => t.classList.remove('active'));
 
     document.getElementById(`eval-sub-content-${subTabName}`).classList.add('active');
-    el.classList.add('active');
+    if (element) element.classList.add('active');
 }
 
-// --------------------------------------------------------------------------
-// REVIEW 4K: CONTROLLER & KALKULASI SKALA 1-5
-// --------------------------------------------------------------------------
-function switchPeriodeTab(periodeKey, el) {
+// REVIEW 4K CONTROLLER
+function switchPeriodeTab(periodeKey, element) {
     document.querySelectorAll('.periode-tab-btn').forEach(btn => btn.classList.remove('active'));
-    el.classList.add('active');
+    if (element) element.classList.add('active');
 
     currentActivePeriode = periodeKey;
     let labelText = "Periode: Bulan 1";
-    if(periodeKey === "bulan2") labelText = "Periode: Bulan 2 (Draft)";
-    if(periodeKey === "bulan3") labelText = "Periode: Bulan 3 (Draft)";
+    if (periodeKey === "bulan2") labelText = "Periode: Bulan 2";
+    if (periodeKey === "bulan3") labelText = "Periode: Bulan 3";
     document.getElementById("currentPeriodeLabel").innerText = labelText;
 
     loadReview4KData(currentActiveEvalNik, periodeKey);
@@ -585,7 +650,7 @@ function calculate4KAverage() {
     const avgDisplay = document.getElementById("avg4KScoreDisplay");
     const predikatBadge = document.getElementById("predikat4KBadge");
 
-    if(totalValid.length === 0) {
+    if (totalValid.length === 0) {
         avgDisplay.innerText = "0.0";
         avgDisplay.className = "total-score-badge score-failed";
         predikatBadge.className = "badge badge-gagal margin-top";
@@ -616,16 +681,24 @@ function calculate4KAverage() {
 }
 
 function saveReview4KData() {
-    alert(`Review 4K Periode [${currentActivePeriode.toUpperCase()}] Berhasil Disimpan!\nRata-rata: ${document.getElementById("avg4KScoreDisplay").innerText}`);
+    if (!db.review4KData[currentActiveEvalNik]) db.review4KData[currentActiveEvalNik] = {};
+    db.review4KData[currentActiveEvalNik][currentActivePeriode] = {
+        karakter: parseFloat(document.getElementById("k1_score").value) || 0.0,
+        komitmen: parseFloat(document.getElementById("k2_score").value) || 0.0,
+        kontribusi: parseFloat(document.getElementById("k3_score").value) || 0.0,
+        kompetensi: parseFloat(document.getElementById("k4_score").value) || 0.0,
+        karakterNote: document.getElementById("k1_note").value,
+        komitmenNote: document.getElementById("k2_note").value,
+        kontribusiNote: document.getElementById("k3_note").value,
+        kompetensiNote: document.getElementById("k4_note").value
+    };
+    showNotificationToast(`Review 4K Periode [${currentActivePeriode.toUpperCase()}] Berhasil Disimpan!`);
 }
 
-// --------------------------------------------------------------------------
-// RENDER FILES & LEMBAR ESSAI
-// --------------------------------------------------------------------------
+// RENDER FILES & ESSAI
 function renderStudentFilesTab(nik, name, divisi) {
     const containerFiles = document.getElementById("filesContainerList");
     const containerEssai = document.getElementById("essaiCardPreviewList");
-    
     containerFiles.innerHTML = "";
     containerEssai.innerHTML = "";
 
@@ -665,7 +738,7 @@ function renderStudentFilesTab(nik, name, divisi) {
         {
             modulName: `Modul Pembelajaran Praktik (${divisi})`,
             soalText: "Jelaskan langkah-langkah penanganan pekerjaan harian sesuai SOP divisi Anda!",
-            jawabanKaryawan: "Melakukan verifikasi berkas awal, berkoordinasi dengan atasan terkait kelengkapan dokumen, serta menginput data mutasi ke dalam sistem FAT ERP tepat waktu."
+            jawabanSiswa: "Melakukan verifikasi berkas awal, berkoordinasi dengan atasan terkait kelengkapan dokumen, serta menginput data mutasi ke dalam sistem FAT ERP tepat waktu."
         }
     ];
 
@@ -694,18 +767,15 @@ function renderStudentFilesTab(nik, name, divisi) {
 
 function openEssaiViewerModal(nik, name, divisi) {
     const modalContent = document.getElementById("modalEssaiContent");
-    const modalTitle = document.getElementById("essaiModalTitle");
-    const modalSubtext = document.getElementById("essaiModalSubtext");
-
-    modalTitle.innerHTML = `<i class="fa-solid fa-file-signature"></i> Lembar Jawaban Soal Essai: ${name}`;
-    modalSubtext.innerText = `Divisi: ${divisi} | NIK: ${nik}`;
+    document.getElementById("essaiModalTitle").innerHTML = `<i class="fa-solid fa-file-signature"></i> Lembar Jawaban Soal Essai: ${name}`;
+    document.getElementById("essaiModalSubtext").innerText = `Divisi: ${divisi} | NIK: ${nik}`;
     modalContent.innerHTML = "";
 
     const essaiItems = db.studentEssaiAnswers[nik] || [
         {
             modulName: `Modul Pembelajaran Praktik (${divisi})`,
             soalText: "Jelaskan langkah-langkah penanganan pekerjaan harian sesuai SOP divisi Anda!",
-            jawabanKaryawan: "Melakukan verifikasi berkas awal, berkoordinasi dengan atasan terkait kelengkapan dokumen, serta menginput data mutasi ke dalam sistem FAT ERP tepat waktu."
+            jawabanSiswa: "Melakukan verifikasi berkas awal, berkoordinasi dengan atasan terkait kelengkapan dokumen, serta menginput data mutasi ke dalam sistem FAT ERP tepat waktu."
         }
     ];
 
@@ -713,12 +783,8 @@ function openEssaiViewerModal(nik, name, divisi) {
         modalContent.innerHTML += `
             <div class="modal-essai-item">
                 <div class="modal-essai-q-title">#Soal ${idx + 1}: ${item.modulName}</div>
-                <div style="font-size:11px; color:#444; margin-bottom:8px;">
-                    <strong>Pertanyaan:</strong><br>${item.soalText}
-                </div>
-                <div class="modal-essai-ans-body">
-                    <strong>Jawaban Karyawan:</strong><br>${item.jawabanKaryawan.replace(/\n/g, '<br>')}
-                </div>
+                <div style="font-size:11px; color:#444; margin-bottom:8px;"><strong>Pertanyaan:</strong><br>${item.soalText}</div>
+                <div class="modal-essai-ans-body"><strong>Jawaban Siswa:</strong><br>${item.jawabanSiswa.replace(/\n/g, '<br>')}</div>
             </div>
         `;
     });
@@ -730,9 +796,7 @@ function closeEssaiViewerModal() {
     document.getElementById("essaiViewerModal").style.display = "none";
 }
 
-// --------------------------------------------------------------------------
 // RENDER NILAI
-// --------------------------------------------------------------------------
 function renderScoresSubTab(nik) {
     const qBody = document.getElementById("detailQuizScoreBody");
     const aBody = document.getElementById("detailAsesorScoreBody");
@@ -774,7 +838,7 @@ function renderScoresSubTab(nik) {
                 <td><input type="text" class="evaluator-input" value="${a.evaluatorName}"></td>
                 <td><input type="number" class="evaluator-input text-center sub-eval-score-field" value="${a.score}" min="0" max="100" onchange="calculateSubEvaluatorScore()"></td>
                 <td><input type="text" class="evaluator-input" value="${a.note}"></td>
-                <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="removeSubEvaluatorRow(this)"></i></td>
+                <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove(); calculateSubEvaluatorScore();"></i></td>
             </tr>
         `;
     });
@@ -783,21 +847,15 @@ function renderScoresSubTab(nik) {
 }
 
 function addSubEvaluatorRow() {
-    const aBody = document.getElementById("detailAsesorScoreBody");
-    aBody.innerHTML += `
+    document.getElementById("detailAsesorScoreBody").innerHTML += `
         <tr>
             <td><input type="text" class="evaluator-input" placeholder="Bidang Materi"></td>
             <td><input type="text" class="evaluator-input" placeholder="Nama Evaluator"></td>
             <td><input type="number" class="evaluator-input text-center sub-eval-score-field" value="80" min="0" max="100" onchange="calculateSubEvaluatorScore()"></td>
             <td><input type="text" class="evaluator-input" placeholder="Catatan evaluator..."></td>
-            <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="removeSubEvaluatorRow(this)"></i></td>
+            <td class="text-center"><i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove(); calculateSubEvaluatorScore();"></i></td>
         </tr>
     `;
-    calculateSubEvaluatorScore();
-}
-
-function removeSubEvaluatorRow(btn) {
-    btn.closest('tr').remove();
     calculateSubEvaluatorScore();
 }
 
@@ -819,11 +877,11 @@ function calculateSubEvaluatorScore() {
 
     document.getElementById("subCalcQuiz").innerText = `${quizPart.toFixed(1)} pt`;
     document.getElementById("subCalcEval").innerText = `${evalPart.toFixed(1)} pt`;
-    
-    const scoreDisplay = document.getElementById("subTotalPointDisplay");
-    scoreDisplay.innerText = finalScore;
 
+    const scoreDisplay = document.getElementById("subTotalPointDisplay");
     const badge = document.getElementById("subPassBadge");
+
+    scoreDisplay.innerText = finalScore;
     if (finalScore >= 80) {
         scoreDisplay.className = "total-score-badge score-passed";
         badge.className = "badge badge-lulus margin-top";
@@ -835,16 +893,56 @@ function calculateSubEvaluatorScore() {
     }
 }
 
-// HELPER: TAG RENDERER
+// DIRECT VIEWER
+function openDirectFileViewer(title) {
+    const viewerTitle = document.getElementById("fileViewerTitle");
+    const viewerContent = document.getElementById("fileViewerContent");
+    const viewerSubtext = document.getElementById("fileViewerSubtext");
+    const lowerTitle = title.toLowerCase();
+
+    if (lowerTitle.includes("video") || lowerTitle.includes("tutorial") || lowerTitle.includes("brighton app")) {
+        viewerTitle.innerHTML = `<i class="fa-solid fa-file-video" style="color:#3498db;"></i> Video Preview: ${title}`;
+        viewerSubtext.innerText = "Format: MP4 Video Player";
+        viewerContent.innerHTML = `<video controls autoplay style="width: 100%; height: 100%; object-fit: contain;"><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>`;
+    } else if (lowerTitle.includes("script") || lowerTitle.includes("ppt") || lowerTitle.includes("sosialisasi") || lowerTitle.includes("materi")) {
+        viewerTitle.innerHTML = `<i class="fa-solid fa-file-powerpoint" style="color:#e67e22;"></i> Presentation Slide: ${title}`;
+        viewerSubtext.innerText = "Format: Microsoft PowerPoint (.pptx)";
+        viewerContent.innerHTML = `
+            <div style="background: #1e1e1e; color: #fff; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; text-align: center;">
+                <i class="fa-solid fa-file-powerpoint" style="font-size: 64px; color: #e67e22; margin-bottom: 15px;"></i>
+                <h4 style="font-size: 16px; margin-bottom: 8px;">${title}</h4>
+                <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">Slide Presentasi Terlampir (Modul Online Viewer)</p>
+                <button class="btn btn-success" onclick="alert('Membuka slide PowerPoint...')"><i class="fa-solid fa-play"></i> Putar Slide Show</button>
+            </div>
+        `;
+    } else {
+        viewerTitle.innerHTML = `<i class="fa-solid fa-file-pdf" style="color:#e74c3c;"></i> Document Viewer: ${title}`;
+        viewerSubtext.innerText = "Format: PDF Document Viewer";
+        viewerContent.innerHTML = `<iframe src="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" style="width: 100%; height: 100%; border: none;"></iframe>`;
+    }
+
+    document.getElementById("fileViewerModal").style.display = "flex";
+}
+
+function closeFileViewerModal() {
+    document.getElementById("fileViewerModal").style.display = "none";
+    document.getElementById("fileViewerContent").innerHTML = "";
+}
+
+// HELPER TAGS
 function renderTags(containerId, tagArray) {
     const container = document.getElementById(containerId);
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = "";
-    tagArray.forEach(tag => {
+    (tagArray || []).forEach(tag => {
         container.innerHTML += `
             <span class="tag-item">
                 ${tag} <span class="close-tag" onclick="this.parentElement.remove()">&times;</span>
             </span>
         `;
     });
+}
+
+function showNotificationToast(message) {
+    alert(message);
 }
