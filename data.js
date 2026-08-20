@@ -1,6 +1,6 @@
 // =========================================================================
 // DATABASE DUMMY LENGKAP & RELASIONAL - FAT TRAINING CENTER
-// Data Claudia Amanda: 2 Bulan 20 Hari, Status "Sudah Dinilai", Review 4K Lengkap Bulan 1-3
+// Data Handout: 4 Paket Sesuai dengan Master Training (Finance, Legal, HR, Operasional)
 // =========================================================================
 
 const db = {
@@ -365,13 +365,13 @@ const db = {
             divisi: "BPI", 
             jabatan: "Supervisor", 
             cabang: "Brighton Real Estate", 
-            status: "Sudah Dinilai", // SATU-SATUNYA YANG SUDAH DINILAI (LULUS)
+            status: "Sudah Dinilai", 
             tanggalInput: "2026-08-10 10:00:00"
         }
     ],
 
     // ---------------------------------------------------------------------
-    // 2. MASTER TRAINING
+    // 2. MASTER TRAINING (4 PAKET MATERI)
     // ---------------------------------------------------------------------
     masterTrainingList: [
         {
@@ -559,7 +559,7 @@ const db = {
     ],
 
     // ---------------------------------------------------------------------
-    // 4. MASTER HANDOUT
+    // 4. DATA HANDOUT (4 PAKET SERAGAM DENGAN MASTER TRAINING)
     // ---------------------------------------------------------------------
     masterHandoutList: [
         {
@@ -570,11 +570,69 @@ const db = {
             masaKerja: "All",
             totalKaryawan: 5,
             materiItems: [
-                { title: "Piutang Primary, Secondary & DP", tipe: "Hard Skill", quizTitle: "Quiz PG: Piutang & Komisi KPR Finance" }
+                { title: "Piutang Primary, Secondary & DP", tipe: "Hard Skill", quizTitle: "Quiz PG: Piutang & Komisi KPR Finance" },
+                { title: "Surat Pengantar KPR & Order Komisi KPR", tipe: "Hard Skill", quizTitle: "Quiz PG: Piutang & Komisi KPR Finance" },
+                { title: "Invoice Primary, Secondary, Internal & BT", tipe: "Hard Skill", quizTitle: "Quiz Essai: Studi Kasus Piutang & DP Finance" }
             ],
             employees: [
                 { name: "Khoirunnisa", nickname: "Nisa", nik: "208260973", divisi: "FINANCE", jabatan: "Staff", joinDate: "2026-08-12" },
-                { name: "Nabila Rizky Amalia Putri", nickname: "Nabila", nik: "208260968", divisi: "FINANCE", jabatan: "Staff", joinDate: "2026-08-05" }
+                { name: "Nabila Rizky Amalia Putri", nickname: "Nabila", nik: "208260968", divisi: "FINANCE", jabatan: "Staff", joinDate: "2026-08-05" },
+                { name: "Rachma Riska Mahani", nickname: "Rachma", nik: "208260969", divisi: "FINANCE", jabatan: "Staff", joinDate: "2026-08-05" },
+                { name: "Khusnul Khotimah", nickname: "Khusnul", nik: "208260970", divisi: "FINANCE", jabatan: "Staff", joinDate: "2026-08-05" },
+                { name: "Jelita Anjani", nickname: "Jelita", nik: "208260967", divisi: "FINANCE", jabatan: "Staff", joinDate: "2026-08-03" }
+            ]
+        },
+        {
+            id: 2,
+            name: "Paket Onboarding Legal & BPI",
+            divisi: "BPI",
+            jabatan: ["Staff", "Supervisor", "Asst. Manager"],
+            masaKerja: "All",
+            totalKaryawan: 3,
+            materiItems: [
+                { title: "Pentingnya Legalitas Sebelum Memasarkan", tipe: "Hard Skill", quizTitle: "Quiz PG: Legalitas Properti & Pengisian MOU" },
+                { title: "Panduan Pengisian MOU Jual Beli & Sewa Menyewa", tipe: "Hard Skill", quizTitle: "Quiz Essai: Penyelesaian Sengketa Klausul MOU Legal" }
+            ],
+            employees: [
+                { name: "Claudia Amanda", nickname: "Amanda", nik: "205260954", divisi: "BPI", jabatan: "Supervisor", joinDate: "2026-06-02" },
+                { name: "Anastasya Maylan Anggraini", nickname: "Tasya", nik: "207260963", divisi: "BPI", jabatan: "Staff", joinDate: "2026-07-13" },
+                { name: "Muklis", nickname: "Muklis", nik: "107260963", divisi: "BPI", jabatan: "Staff", joinDate: "2026-07-17" }
+            ]
+        },
+        {
+            id: 3,
+            name: "Paket Onboarding Human Resource & UNI",
+            divisi: "HRD, UNI",
+            jabatan: ["Staff", "Supervisor", "Asst. Manager"],
+            masaKerja: "All",
+            totalKaryawan: 3,
+            materiItems: [
+                { title: "Sosialisasi & Guideline Pendaftaran Kelas Brighton UNI", tipe: "Soft Skill", quizTitle: "Quiz PG: Sosialisasi Sistem Brighton UNI" },
+                { title: "SOP Kinerja Operasional & Audit Internal", tipe: "Hard Skill", quizTitle: "Quiz Essai: Penarikan & Analisa Data Report Brighton UNI" }
+            ],
+            employees: [
+                { name: "Siftiyan Abdullah Zidan Arzaqi", nickname: "Siftiyan", nik: "107260965", divisi: "HRD", jabatan: "Asst. Manager", joinDate: "2026-07-29" },
+                { name: "Mitia Eka Renisa", nickname: "Mitia", nik: "208260972", divisi: "UNI", jabatan: "Staff", joinDate: "2026-08-18" },
+                { name: "Yohanna Meilani Putri", nickname: "Yohanna", nik: "206260957", divisi: "UNI", jabatan: "Staff", joinDate: "2026-06-22" }
+            ]
+        },
+        {
+            id: 4,
+            name: "Paket Onboarding Operasional & Promosi",
+            divisi: "OPERASIONAL, EVENT, MARKOM",
+            jabatan: ["Staff", "Supervisor", "Asst. Manager"],
+            masaKerja: "All",
+            totalKaryawan: 5,
+            materiItems: [
+                { title: "Video Tutorial Brighton App untuk PA", tipe: "Hard Skill", quizTitle: "Quiz PG: Standar Promosi & Brighton App" },
+                { title: "Modul dan SOP Media Promosi", tipe: "Hard Skill", quizTitle: "Quiz Essai: Standardisasi Audit Lapangan Operasional" }
+            ],
+            employees: [
+                { name: "Tio Satrio Wibisono", nickname: "Tio", nik: "107260966", divisi: "EVENT", jabatan: "Staff", joinDate: "2026-07-31" },
+                { name: "Muhammad Ridwan", nickname: "Ridwan", nik: "107260964", divisi: "EVENT", jabatan: "Staff", joinDate: "2026-07-20" },
+                { name: "Silvia Dwi Wulandari", nickname: "Silvia", nik: "207260962", divisi: "MARKOM", jabatan: "Staff", joinDate: "2026-07-01" },
+                { name: "Muhamad Eidho Isnaeni Harhestian", nickname: "Eidho", nik: "106260959", divisi: "MARKOM", jabatan: "Staff", joinDate: "2026-06-26" },
+                { name: "Cilvi Nanda Indriani", nickname: "Silvi", nik: "206260956", divisi: "OPERASIONAL", jabatan: "Staff", joinDate: "2026-06-22" }
             ]
         }
     ],

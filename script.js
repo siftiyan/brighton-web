@@ -422,7 +422,7 @@ function saveQuizData(e) {
 }
 
 // =========================================================================
-// 4. MASTER HANDOUT MODULE
+// 4. HANDOUT MODULE (SEBELUMNYA MASTER HANDOUT - MENAMPILKAN 4 PAKET)
 // =========================================================================
 function renderHandoutGrid() {
     const tbody = document.getElementById("handoutGridBody");
@@ -430,6 +430,7 @@ function renderHandoutGrid() {
     tbody.innerHTML = "";
 
     db.masterHandoutList.forEach((item) => {
+        const jabatanText = Array.isArray(item.jabatan) ? item.jabatan.join(", ") : item.jabatan;
         tbody.innerHTML += `
             <tr>
                 <td><strong>${item.name}</strong></td>
@@ -437,8 +438,8 @@ function renderHandoutGrid() {
                 <td>${item.masaKerja}</td>
                 <td>Total Karyawan : ${item.totalKaryawan}</td>
                 <td class="text-center">
-                    <i class="fa-solid fa-pen-to-square" style="cursor:pointer; color:#7f8c8d; margin-right:6px;" onclick="openHandoutDetail(${item.id})"></i>
-                    <i class="fa-solid fa-circle-xmark" style="color:#c0392b;" onclick="this.closest('tr').remove()"></i>
+                    <i class="fa-solid fa-pen-to-square" title="Edit Handout" style="cursor:pointer; color:#7f8c8d; margin-right:6px;" onclick="openHandoutDetail(${item.id})"></i>
+                    <i class="fa-solid fa-circle-xmark" style="color:#c0392b; cursor:pointer;" onclick="this.closest('tr').remove()"></i>
                 </td>
             </tr>
         `;
@@ -484,6 +485,8 @@ function openHandoutDetail(id) {
             </tr>
         `;
     });
+
+    document.getElementById("empFooterInfo").innerText = `View 1-${data.employees.length} of ${data.employees.length}`;
 }
 
 function openLinkMateriModal() {

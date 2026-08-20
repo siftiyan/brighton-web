@@ -46,7 +46,7 @@
                     <ul class="nav-tabs">
                         <li class="tab-item" onclick="switchMainTab('master-training', this)">Master Training</li>
                         <li class="tab-item" onclick="switchMainTab('quiz', this)">Master Quiz</li>
-                        <li class="tab-item" onclick="switchMainTab('master-handout', this)">Master Handout Training</li>
+                        <li class="tab-item" onclick="switchMainTab('master-handout', this)">Handout</li> <!-- NAMA GANTI HANDOUT -->
                         <li class="tab-item active" onclick="switchMainTab('evaluasiku', this)">Evaluasiku</li>
                     </ul>
                 </div>
@@ -297,17 +297,17 @@
                 </div>
 
                 <!-- ======================================================= -->
-                <!-- TAB 3: MASTER HANDOUT                                   -->
+                <!-- TAB 3: HANDOUT (SEBELUMNYA MASTER HANDOUT)              -->
                 <!-- ======================================================= -->
                 <div id="tab-master-handout" class="tab-view">
                     <div id="handout-list-view">
                         <div class="action-bar">
-                            <button class="btn btn-success" onclick="openHandoutDetail('new')"><i class="fa-solid fa-plus"></i> Add Master Handout Data</button>
+                            <button class="btn btn-success" onclick="openHandoutDetail('new')"><i class="fa-solid fa-plus"></i> Add Handout Data</button>
                             <button class="btn btn-secondary">Export to CSV</button>
                             <button class="btn btn-secondary">Print</button>
                         </div>
                         <div class="table-container">
-                            <div class="table-header-info" id="handoutHeaderInfo">View 1-1 of 1</div>
+                            <div class="table-header-info" id="handoutHeaderInfo">View 1-4 of 4</div>
                             <table class="data-table">
                                 <thead>
                                     <tr>
@@ -320,12 +320,12 @@
                                 </thead>
                                 <tbody id="handoutGridBody"></tbody>
                             </table>
-                            <div class="table-footer-info" id="handoutFooterInfo">View 1-1 of 1</div>
+                            <div class="table-footer-info" id="handoutFooterInfo">View 1-4 of 4</div>
                         </div>
                     </div>
 
                     <div id="handout-detail-view" class="detail-form-container" style="display: none;">
-                        <div class="breadcrumb">&lt; Master Handout Training / <strong>#1 Builder Paket Pelatihan</strong> <span class="tab-sub-right">Paket All-in-One</span></div>
+                        <div class="breadcrumb">&lt; Handout / <strong>#1 Builder Paket Pelatihan</strong> <span class="tab-sub-right">Paket All-in-One</span></div>
                         <form onsubmit="saveHandoutData(event)">
                             <div class="form-section">
                                 <div class="form-row">
@@ -415,8 +415,8 @@
                     <div id="eval-grid-view">
                         <div class="action-bar">
                             <button class="btn btn-success"><i class="fa-solid fa-circle-check"></i> Approve Terpilih</button>
-                            <button class="btn btn-secondary"><i class="fa-solid fa-file-csv"></i> Export to CSV</button>
-                            <button class="btn btn-secondary"><i class="fa-solid fa-print"></i> Print</button>
+                            <button class="btn btn-secondary">Export to CSV</button>
+                            <button class="btn btn-secondary">Print</button>
                         </div>
                         
                         <div class="table-container">
@@ -647,9 +647,6 @@
         </main>
     </div>
 
-    <!-- =============================================================== -->
-    <!-- MODAL POPUPS                                                    -->
-    <!-- =============================================================== -->
     <!-- MODAL 1: LINK BANK MATERI & QUIZ -->
     <div class="modal-overlay" id="linkMateriModal">
         <div class="modal-box">
@@ -742,7 +739,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT INCLUSION (SINKRON KE script.js) -->
+    <!-- SCRIPT INCLUSION -->
     <script src="data.js"></script>
     <script src="script.js"></script>
 </body>
